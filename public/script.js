@@ -81,22 +81,14 @@ const audio = {
 };
 
 function initAudio() {
-  // Try multiple extensions to support .mp3, .wav, .aiff
-  function sound(pathBase, exts = ['.mp3', '.wav', '.aiff']) {
-    for (const ext of exts) {
-      try {
-        const audio = new Audio(`${pathBase}${ext}`);
-        if (audio) return audio;
-      } catch {}
-    }
-    return null;
-  }
-
-  audio.pool.click = sound('/public/sfx/click');
-  audio.pool.correct = sound('/public/sfx/correct');
-  audio.pool.wrong = sound('/public/sfx/wrong');
-  audio.pool.victory = sound('/public/sfx/victory');
-  audio.pool.thunder = [sound('/public/sfx/thunder1'), sound('/public/sfx/thunder2')];
+  audio.pool.click = new Audio("/public/sfx/click.mp3.wav");
+  audio.pool.correct = new Audio("/public/sfx/correct.mp3.wav");
+  audio.pool.wrong = new Audio("/public/sfx/wrong.mp3.mp3");
+  audio.pool.victory = new Audio("/public/sfx/victory.mp3.wav");
+  audio.pool.thunder = [
+    new Audio("/public/sfx/thunder1.mp3.wav"),
+    new Audio("/public/sfx/thunder2.mp3.aiff"),
+  ];
 }
 
 function scheduleAtmosphericThunder() {
