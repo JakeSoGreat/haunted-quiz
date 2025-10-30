@@ -25,17 +25,13 @@ async function startQuiz() {
   questionEl.textContent = 'Summoning the spirits... please wait...';
   optionsEl.innerHTML = '';
   
-  const PROXY_URL = '/api/generate-question'; 
+  const PROXY_URL = '../api/generate-question.json'; 
 
   try {
-    const res = await fetch(PROXY_URL, { 
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-    });
-
+    const res = await fetch(PROXY_URL);
+    
     if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(`Failed to fetch quiz (Status: ${res.status}). Error: ${errorData.error || 'Unknown error'}`);
+      throw new Error(`Failed to fetch quiz (Status: ${res.status})`);
     }
 
     // This array holds the 10 question objects returned from the proxy

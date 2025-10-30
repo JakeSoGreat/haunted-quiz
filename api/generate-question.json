@@ -1,0 +1,52 @@
+[
+  {
+    "question": "In what country did the tradition of Halloween originate?",
+    "options": ["United States", "Ireland", "Germany", "Mexico"],
+    "answer": "Ireland"
+  },
+  {
+    "question": "What is the name of the main antagonist in the film *Halloween*?",
+    "options": ["Freddy Krueger", "Jason Voorhees", "Michael Myers", "Pinhead"],
+    "answer": "Michael Myers"
+  },
+  {
+    "question": "Which of these creatures is traditionally allergic to sunlight?",
+    "options": ["Werewolf", "Vampire", "Mummy", "Ghost"],
+    "answer": "Vampire"
+  },
+  {
+    "question": "The fear of ghosts is known as what?",
+    "options": ["Claustrophobia", "Triskaidekaphobia", "Spectrophobia", "Arachnophobia"],
+    "answer": "Spectrophobia"
+  },
+  {
+    "question": "What vegetable was originally used for carving Jack-O'-Lanterns before pumpkins became popular?",
+    "options": ["Potato", "Turnip", "Beet", "Squash"],
+    "answer": "Turnip"
+  },
+  {
+    "question": "Transylvania is the legendary home of which famous fictional count?",
+    "options": ["Count Chocula", "Count Dracula", "Count Orlok", "Count Von Count"],
+    "answer": "Count Dracula"
+  },
+  {
+    "question": "The holiday Dia de Muertos (Day of the Dead) is celebrated in which culture?",
+    "options": ["Peruvian", "Spanish", "Mexican", "Brazilian"],
+    "answer": "Mexican"
+  },
+  {
+    "question": "Which actor played Beetlejuice in the 1988 film?",
+    "options": ["Johnny Depp", "Jack Nicholson", "Michael Keaton", "Bill Murray"],
+    "answer": "Michael Keaton"
+  },
+  {
+    "question": "What candy is often associated with the phrase 'Trick or Treat'?",
+    "options": ["Chocolate Bars", "Lollipops", "Candy Corn", "Gummy Bears"],
+    "answer": "Candy Corn"
+  },
+  {
+    "question": "Which novel features the line, 'I am Dracula, and I bid you welcome.'?",
+    "options": ["Frankenstein", "Dracula", "The Exorcist", "Carmilla"],
+    "answer": "Dracula"
+  }
+]
