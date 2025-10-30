@@ -2,8 +2,6 @@
 // It must be deployed to a serverless platform (like Vercel or Netlify) 
 // to securely manage the OPENAI_API_KEY environment variable.
 
-// NOTE: This implementation assumes the environment provides a response object (res)
-// from the underlying server framework (e.g., Express or a similar wrapper).
 
 export default async function handler(req, res) {
   // Ensure the client is sending a POST request to avoid the 405 error.
