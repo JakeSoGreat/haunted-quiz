@@ -1,0 +1,63 @@
+/* Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Butcherman&family=Nova+Square&family=SUSE+Mono:ital,wght@0,100..800;1,100..800&family=Tilt+Neon&display=swap');
+
+/* Root */
+:root {
+  /* Colours */
+  --black-color: #191102; /* smoky black */
+  --green-color: #65ff00; /* slime green */
+  --purple-color: #542e71; /* eminence purple */
+  --yellow-color: #f9c80e; /*  jonquil */
+  --orange-color: #e05600; /* persimmon */
+
+  /* Fonts */
+  --font-heading: 'Butcherman', sans-serif;
+  --font-mono: 'SUSE Mono', monospace;
+}
+
+body {
+  background-color: var(--black-color);
+  color: var(--yellow-color);
+  font-family: var(--font-mono);
+  text-align: center;
+  padding: 50px;
+}
+
+.quiz-container {
+  background-color: var(--purple-color);
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+h1 {
+  font-family: var(--font-heading);
+  font-size: 3em;
+  margin-bottom: 20px;
+}
+
+p {
+  font-family: var(--font-mono);
+  font-size: 1.2em;
+}
+
+button {
+  background: var(--orange-color);
+  color: var(--black-color);
+  border: none;
+  padding: 10px 20px;
+  margin: 10px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: var(--green-color);
+}
+
+.hidden {
+  display: none;
+}
