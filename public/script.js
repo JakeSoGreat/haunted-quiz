@@ -116,3 +116,63 @@ function showResult() {
   startBtn.textContent = 'Play Again';
   startBtn.classList.remove('hidden');
 }
+
+// --- SFX ---
+const audio = {
+enabled: () => sfxToggle.checked,
+pool: {},
+play(name, { volume = 0.9 } = {}) {
+if (!this.enabled()) return;
+let el;
+if (Array.isArray(this.pool[name])) {
+el = this.pool[name][Math.floor(Math.random() * this.pool[name].length)].cloneNode();
+} else {
+el = this.pool[name]?.cloneNode();
+}
+if (!el) return;
+el.volume = volume;
+// Some mobile browsers need play() inside a user gesture; ensured by Start button
+el.play().catch(() => {});
+}
+};
+
+
+function initAudio() {
+audio.pool.click = new Audio('/public/sfx/click.mp3');
+audio.pool.correct = new Audio('/public/sfx/correct.mp3');
+audio.pool.wrong = new Audio('/public/sfx/wrong.mp3');
+audio.pool.victory = new Audio('/public/sfx/victory.mp3');
+audio.pool.thunder = [
+new Audio('/public/sfx/thunder1.mp3'),
+new Audio('/public/sfx/thunder2.mp3')
+];
+}
+
+
+function scheduleAtmosphericThunder() {
+clearTimeout(thunderTimer);
+// Respect reduced motion by skipping flashes entirely
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const minMs = 10000, maxMs = 20000;
+const next = Math.floor(Math.random() * (maxMs - minMs)) + minMs;
+thunderTimer = setTimeout(() => {
+if (!document.hidden) {
+if (!reduced && flashToggle.checked) lightningFlash();
+audio.play('thunder', { volume: 0.65 });
+}
+scheduleAtmosphericThunder();
+}, next);
+}
+
+
+function cancelAtmosphericThunder() { clearTimeout(thunderTimer); }
+
+
+function lightningFlash() {
+// Staggered double-flash effect
+if (!flashToggle.checked) return;
+if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+lightningOverlay.classList.remove('flash'); // restart animation
+void lightningOverlay.offsetWidth;
+lightningOverlay.classList.add('flash');
+}
