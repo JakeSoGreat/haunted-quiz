@@ -111,10 +111,6 @@ function scheduleAtmosphericThunder() {
     }
     scheduleAtmosphericThunder();
   }, next);
-});
-    }
-    scheduleAtmosphericThunder();
-  }, next);
 }
 
 function cancelAtmosphericThunder() { clearTimeout(thunderTimer); }
@@ -249,4 +245,3 @@ function showResult() {
   startBtn.classList.remove('hidden');
   startBtn.disabled = false;
 }
-```
