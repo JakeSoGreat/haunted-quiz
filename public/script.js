@@ -17,11 +17,30 @@ const lightningOverlay = document.getElementById('lightning-overlay');
 const sfxToggle = document.getElementById('sfx-toggle');
 const flashToggle = document.getElementById('flash-toggle');
 
+// Guard against missing optional controls (older HTML)
+const hasSfxToggle = !!sfxToggle;
+const hasFlashToggle = !!flashToggle;
+
 startBtn.addEventListener('click', startQuiz);
 
 // Restore user prefs
 const PREFS_KEY = 'haunted_prefs_v1';
 const prefs = JSON.parse(localStorage.getItem(PREFS_KEY) || '{}');
+if (hasSfxToggle && typeof prefs.sfxEnabled === 'boolean') sfxToggle.checked = prefs.sfxEnabled;
+if (hasFlashToggle && typeof prefs.flashEnabled === 'boolean') flashToggle.checked = prefs.flashEnabled;
+
+if (hasSfxToggle) {
+  sfxToggle.addEventListener('change', () => {
+    const newPrefs = { sfxEnabled: sfxToggle.checked, flashEnabled: hasFlashToggle ? flashToggle.checked : true };
+    localStorage.setItem(PREFS_KEY, JSON.stringify(newPrefs));
+  });
+}
+if (hasFlashToggle) {
+  flashToggle.addEventListener('change', () => {
+    const newPrefs = { sfxEnabled: hasSfxToggle ? sfxToggle.checked : true, flashEnabled: flashToggle.checked };
+    localStorage.setItem(PREFS_KEY, JSON.stringify(newPrefs));
+  });
+}
 if (typeof prefs.sfxEnabled === 'boolean') sfxToggle.checked = prefs.sfxEnabled;
 if (typeof prefs.flashEnabled === 'boolean') flashToggle.checked = prefs.flashEnabled;
 
@@ -48,7 +67,7 @@ function setLoading(isLoading) {
 
 // --- SFX ---
 const audio = {
-  enabled: () => sfxToggle.checked,
+  enabled: () => (hasSfxToggle ? (sfxToggle?.checked ?? true) : true),
   pool: {},
   play(name, { volume = 0.9 } = {}) {
     if (!this.enabled()) return;
@@ -90,8 +109,12 @@ function scheduleAtmosphericThunder() {
   const next = Math.floor(Math.random() * (maxMs - minMs)) + minMs;
   thunderTimer = setTimeout(() => {
     if (!document.hidden) {
-      if (!reduced && flashToggle.checked) lightningFlash();
+      if (!reduced && (hasFlashToggle ? flashToggle.checked : true)) lightningFlash();
       audio.play('thunder', { volume: 0.65 });
+    }
+    scheduleAtmosphericThunder();
+  }, next);
+});
     }
     scheduleAtmosphericThunder();
   }, next);
@@ -100,8 +123,9 @@ function scheduleAtmosphericThunder() {
 function cancelAtmosphericThunder() { clearTimeout(thunderTimer); }
 
 function lightningFlash() {
-  if (!flashToggle.checked) return;
+  if (hasFlashToggle && !flashToggle.checked) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!lightningOverlay) return;
   lightningOverlay.classList.remove('flash');
   void lightningOverlay.offsetWidth;
   lightningOverlay.classList.add('flash');
