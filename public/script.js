@@ -17,6 +17,9 @@ let thunderTimer = null;
 
 const hasSfxToggle = !!sfxToggle;
 const hasFlashToggle = !!flashToggle;
+// transistion sfx ---
+const quizSection = document.getElementById("quiz");
+
 
 startBtn.addEventListener("click", startQuiz);
 
@@ -50,6 +53,11 @@ async function startQuiz() {
 
     // Start the quiz by rendering the first question
     renderQuestion(quizData[currentQuestionIndex]);
+    // Entrance animation for the first question
+    if (quizSection) {
+      quizSection.classList.remove("transition-out");
+      quizSection.classList.add("transition-in");
+    }
     // kick off ambient thunder sfx/flashes (optional)
     scheduleAtmosphericThunder();
   } catch (error) {
@@ -108,14 +116,44 @@ function handleAnswerClick(event) {
 }
 
 function advanceQuiz() {
-  currentQuestionIndex++;
+  // Play the spooky exit for the current question
+  if (quizSection) {
+    quizSection.classList.remove("transition-in");
+    quizSection.classList.add("transition-out");
+  }
 
-  if (currentQuestionIndex < totalQuestions) {
-    renderQuestion(quizData[currentQuestionIndex]);
+  const proceed = () => {
+    currentQuestionIndex++;
+
+    if (currentQuestionIndex < totalQuestions) {
+      // Render next question, then animate it in
+      renderQuestion(quizData[currentQuestionIndex]);
+
+      // Next tick to ensure DOM updated before animating in
+      requestAnimationFrame(() => {
+        if (quizSection) {
+          quizSection.classList.remove("transition-out");
+          quizSection.classList.add("transition-in");
+        }
+      });
+    } else {
+      if (quizSection)
+        quizSection.classList.remove("transition-out", "transition-in");
+      showResult();
+    }
+  };
+
+  // If animation exists, wait for it; otherwise proceed immediately
+  if (
+    quizSection &&
+    window.matchMedia("(prefers-reduced-motion: no-preference)").matches
+  ) {
+    quizSection.addEventListener("animationend", proceed, { once: true });
   } else {
-    showResult();
+    proceed();
   }
 }
+
 
 function showResult() {
   questionEl.textContent = "";
@@ -137,7 +175,7 @@ function showResult() {
 
   audio.play("victory", { volume: 0.9 }); // Play victory sound at the end of the quiz
 
-  
+
   // Reset button for a new game
   startBtn.textContent = "Play Again";
   startBtn.classList.remove("hidden");
