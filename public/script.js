@@ -1,6 +1,3 @@
-## /public/script.js
-
-```js
 // --- STATE ---
 let score = 0;
 let currentQuestionIndex = 0;
