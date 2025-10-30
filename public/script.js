@@ -9,12 +9,23 @@ const startBtn = document.getElementById("start-btn");
 const questionEl = document.getElementById("question");
 const optionsEl = document.getElementById("options");
 const resultEl = document.getElementById("result");
+// --- SFX and Visual Effects Elements ---
+const lightningOverlay = document.getElementById("lightning-overlay");
+const sfxToggle = document.getElementById("sfx-toggle");
+const flashToggle = document.getElementById("flash-toggle");
+let thunderTimer = null;
+
+const hasSfxToggle = !!sfxToggle;
+const hasFlashToggle = !!flashToggle;
 
 startBtn.addEventListener("click", startQuiz);
 
 // --- QUIZ CORE FUNCTIONS ---
 
 async function startQuiz() {
+  // Prime audio on user gesture
+  if (!audio.pool.click) initAudio();
+  audio.play("click", { volume: 0.5 });
   score = 0;
   currentQuestionIndex = 0;
 
@@ -39,6 +50,8 @@ async function startQuiz() {
 
     // Start the quiz by rendering the first question
     renderQuestion(quizData[currentQuestionIndex]);
+    // kick off ambient thunder sfx/flashes (optional)
+    scheduleAtmosphericThunder();
   } catch (error) {
     questionEl.textContent =
       "💀 Failed to summon questions. Check the console and proxy server URL.";
