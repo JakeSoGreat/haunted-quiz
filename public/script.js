@@ -16,7 +16,6 @@ const progressEl = document.getElementById('progress');
 const lightningOverlay = document.getElementById('lightning-overlay');
 const sfxToggle = document.getElementById('sfx-toggle');
 const flashToggle = document.getElementById('flash-toggle');
-let audioPreloaded = false;
 
 startBtn.addEventListener('click', startQuiz);
 
@@ -29,13 +28,6 @@ if (typeof prefs.flashEnabled === 'boolean') flashToggle.checked = prefs.flashEn
 [sfxToggle, flashToggle].forEach(el => el.addEventListener('change', () => {
   const newPrefs = { sfxEnabled: sfxToggle.checked, flashEnabled: flashToggle.checked };
   localStorage.setItem(PREFS_KEY, JSON.stringify(newPrefs));
-}));
-
-// Preload sounds quietly after page load/idle for smooth first play
-window.addEventListener('load', () => {
-  const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 500));
-  idle(() => preloadAudio());
-});
 }));
 
 // --- UTIL ---
@@ -80,37 +72,6 @@ function initAudio() {
         const audio = new Audio(`${pathBase}${ext}`);
         if (audio) return audio;
       } catch {}
-    }
-    return null;
-  }
-
-  audio.pool.click = sound('/public/sfx/click');
-  audio.pool.correct = sound('/public/sfx/correct');
-  audio.pool.wrong = sound('/public/sfx/wrong');
-  audio.pool.victory = sound('/public/sfx/victory');
-  audio.pool.thunder = [sound('/public/sfx/thunder1'), sound('/public/sfx/thunder2')];
-}
-
-function preloadAudio() {
-  if (audioPreloaded) return;
-  if (!audio.pool.click) initAudio();
-  const list = [
-    audio.pool.click,
-    audio.pool.correct,
-    audio.pool.wrong,
-    audio.pool.victory,
-    ...(Array.isArray(audio.pool.thunder) ? audio.pool.thunder : [audio.pool.thunder])
-  ].filter(Boolean);
-
-  for (const el of list) {
-    try {
-      el.preload = 'auto';
-      // Ensure the browser starts fetching
-      el.load();
-    } catch {}
-  }
-  audioPreloaded = true;
-}
     }
     return null;
   }
