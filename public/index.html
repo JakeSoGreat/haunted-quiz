@@ -1,28 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Haunted 🎃 Quiz</title>
-  <link rel="stylesheet" href="/public/style.css">
-</head>
-<body>
-  <main class="quiz-container">
-    <h1>👻 Haunted Quiz</h1>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Haunted 🎃 Quiz</title>
+    <link rel="stylesheet" href="/public/style.css" />
+  </head>
+  <body>
+    <main class="quiz-container" role="main">
+      <h1>👻 Haunted Quiz</h1>
 
-    <section id="quiz">
-      <p id="question">Press <strong>Start</strong> to summon your first spooky question...</p>
-      <div id="options">
+      <section id="quiz" aria-live="polite">
+        <p id="question">
+          Press <strong>Start</strong> to summon your first spooky question…
+        </p>
+        <div id="options" class="options" role="group" aria-label="Answer choices">
         </div>
-    </section>
+      </section>
 
-    <div id="controls">
-      <button id="start-btn">Start Quiz</button>
+      <div id="controls" class="controls">
+        <div class="toggles">
+          <label class="toggle">
+            <input type="checkbox" id="sfx-toggle" checked />
+            <span>🔊 Spooky SFX</span>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" id="flash-toggle" checked />
+            <span>⚡ Lightning Flashes</span>
+          </label>
+        </div>
+        <div id="progress" class="progress" aria-hidden="true"></div>
+        <button id="start-btn" type="button">Start Quiz</button>
       </div>
 
-    <section id="result" class="hidden"></section>
-  </main>
+      <section id="result" class="hidden" aria-live="polite"></section>
+    </main>
 
-  <script src="/public/script.js"></script>
-</body>
+    <!-- Lightning overlay for screen flashes -->
+    <div id="lightning-overlay" aria-hidden="true"></div>
+
+    <script src="/public/script.js" defer></script>
+  </body>
 </html>
