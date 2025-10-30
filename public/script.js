@@ -118,52 +118,58 @@ function showResult() {
 }
 
 // --- SFX ---
-const audio = {
-enabled: () => sfxToggle.checked,
-pool: {},
-play(name, { volume = 0.9 } = {}) {
-if (!this.enabled()) return;
-let el;
-if (Array.isArray(this.pool[name])) {
-el = this.pool[name][Math.floor(Math.random() * this.pool[name].length)].cloneNode();
-} else {
-el = this.pool[name]?.cloneNode();
+const audio = new Audio(`${pathBase}${ext}`);
+if (audio) return audio;
+} catch {}
 }
-if (!el) return;
-el.volume = volume;
-// Some mobile browsers need play() inside a user gesture; ensured by Start button
-el.play().catch(() => {});
-}
-};
-
-
-function initAudio() {
-  // Try multiple extensions to support .mp3, .wav, .aiff
-  function sound(pathBase, exts = [".mp3", ".wav", ".aiff"]) {
-    for (const ext of exts) {
-      try {
-        const audio = new Audio(`${pathBase}${ext}`);
-        if (audio) return audio;
-      } catch {}
-    }
-    return null;
-  }
-
-  audio.pool.click = sound("/public/sfx/click");
-  audio.pool.correct = sound("/public/sfx/correct");
-  audio.pool.wrong = sound("/public/sfx/wrong");
-  audio.pool.victory = sound("/public/sfx/victory");
-  audio.pool.thunder = [
-    sound("/public/sfx/thunder1"),
-    sound("/public/sfx/thunder2"),
-  ];
+return null;
 }
 
+
+audio.pool.click = sound('/public/sfx/click');
+audio.pool.correct = sound('/public/sfx/correct');
+audio.pool.wrong = sound('/public/sfx/wrong');
+audio.pool.victory = sound('/public/sfx/victory');
+audio.pool.thunder = [sound('/public/sfx/thunder1'), sound('/public/sfx/thunder2')];
+}
+
+
+function preloadAudio() {
+if (audioPreloaded) return;
+if (!audio.pool.click) initAudio();
+const list = [
+audio.pool.click,
+audio.pool.correct,
+audio.pool.wrong,
+audio.pool.victory,
+...(Array.isArray(audio.pool.thunder) ? audio.pool.thunder : [audio.pool.thunder])
+].filter(Boolean);
+
+
+for (const el of list) {
+try {
+el.preload = 'auto';
+// Ensure the browser starts fetching
+el.load();
+} catch {}
+}
+audioPreloaded = true;
+}
+}
+return null;
+}
+
+
+audio.pool.click = sound('/public/sfx/click');
+audio.pool.correct = sound('/public/sfx/correct');
+audio.pool.wrong = sound('/public/sfx/wrong');
+audio.pool.victory = sound('/public/sfx/victory');
+audio.pool.thunder = [sound('/public/sfx/thunder1'), sound('/public/sfx/thunder2')];
+}
 
 
 function scheduleAtmosphericThunder() {
 clearTimeout(thunderTimer);
-// Respect reduced motion by skipping flashes entirely
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const minMs = 10000, maxMs = 20000;
 const next = Math.floor(Math.random() * (maxMs - minMs)) + minMs;
@@ -181,10 +187,9 @@ function cancelAtmosphericThunder() { clearTimeout(thunderTimer); }
 
 
 function lightningFlash() {
-// Staggered double-flash effect
 if (!flashToggle.checked) return;
 if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-lightningOverlay.classList.remove('flash'); // restart animation
+lightningOverlay.classList.remove('flash');
 void lightningOverlay.offsetWidth;
 lightningOverlay.classList.add('flash');
 }
