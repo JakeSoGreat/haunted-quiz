@@ -90,6 +90,7 @@ function handleAnswerClick(event) {
   if (selectedAnswer === correctAnswer) {
     score++;
     selectedBtn.style.backgroundColor = "var(--green-color)"; // Visual feedback
+    audio.play("correct", { volume: 0.9 });  // Play correct answer sound
   } else {
     selectedBtn.style.backgroundColor = "var(--orange-color)";
     // Highlight the correct answer for the user
@@ -99,6 +100,7 @@ function handleAnswerClick(event) {
     if (correctEl) {
       correctEl.style.border = "2px solid var(--green-color)";
     }
+    audio.play("wrong", { volume: 0.8 });   // Play wrong answer sound
   }
 
   // Pause for visual feedback, then move to the next state
@@ -133,6 +135,9 @@ function showResult() {
   resultEl.innerHTML = `<h2>Your Score: ${score}/${totalQuestions}</h2><p>${message}</p>`;
   resultEl.classList.remove("hidden");
 
+  audio.play("victory", { volume: 0.9 }); // Play victory sound at the end of the quiz
+
+  
   // Reset button for a new game
   startBtn.textContent = "Play Again";
   startBtn.classList.remove("hidden");
