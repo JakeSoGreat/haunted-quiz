@@ -282,6 +282,7 @@ function lightningFlash() {
   const MAX_NODES = 40;
   const USE_BATS  = true; // set true for 🦇 instead of wisps
 
+  
   function startCursorTrail(){
     if (reducedMotion || !pointerFine) return;
     if (layer) return; // already on
