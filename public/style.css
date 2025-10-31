@@ -122,3 +122,33 @@ z-index: 9999;
     100% { opacity: 1; filter: blur(0px); transform: translateY(0) scale(1); }
   }
 }
+/* style for coders page*/
+.coders {
+  float: left;
+  min-height: 120px;
+  
+}
+.coders img {
+  width: 104px;
+  height: auto;
+  
+}
+.coderscontainer {
+  position: relative;
+  min-height: 130px;
+}
+#aziz {
+  background-color: rgb(236, 204, 236);
+}
+#ciaran {
+  background-color: chartreuse
+}
+#daniel {
+  background-color:cornsilk;
+}
+#jake {
+  background-color: #d2e5ea7c;
+}
+#luisa {
+  background-color:rgb(236, 204, 236);
+}
