@@ -1,6 +1,6 @@
 // --- CONFIGURATION ---
 let score = 0;
-let currentQuestionIndex = 0; 
+let currentQuestionIndex = 0;
 const totalQuestions = 10; // Updated to 10 questions per team decision
 let quizData = []; // Array to hold all 10 questions fetched from the proxy
 let timeLeft = 120; // 2 minute timer
@@ -13,43 +13,73 @@ const optionsEl = document.getElementById('options');
 const resultEl = document.getElementById('result');
 const timerEl = document.getElementById('timer');
 
+const startBtn = document.getElementById("start-btn");
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const resultEl = document.getElementById("result");
 
-startBtn.addEventListener('click', startQuiz);
+// --- SFX and Visual Effects Elements ---
+const lightningOverlay = document.getElementById("lightning-overlay");
+const sfxToggle = document.getElementById("sfx-toggle");
+const flashToggle = document.getElementById("flash-toggle");
+let thunderTimer = null;
+
+const hasSfxToggle = !!sfxToggle;
+const hasFlashToggle = !!flashToggle;
+const cursorToggle = document.getElementById("cursor-toggle");
+
+// transistion sfx ---
+const quizSection = document.getElementById("quiz");
+
+
+startBtn.addEventListener("click", startQuiz);
 
 // --- QUIZ CORE FUNCTIONS ---
 
 async function startQuiz() {
+  // Prime audio on user gesture
+  if (!audio.pool.click) initAudio();
+  audio.stop("victory");  // Stop any lingering victory sounds
+  audio.play("click", { volume: 0.5 });
   score = 0;
   currentQuestionIndex = 0;
-  
+
   // Update UI for loading state
-  resultEl.classList.add('hidden');
-  startBtn.classList.add('hidden');
-  
-  questionEl.textContent = 'Summoning the spirits... please wait...';
-  optionsEl.innerHTML = '';
-  
-  const PROXY_URL = '../api/generate-question.json'; 
+  resultEl.classList.add("hidden");
+  startBtn.classList.add("hidden");
+
+  questionEl.textContent = "Summoning the spirits... please wait...";
+  optionsEl.innerHTML = "";
+
+  const PROXY_URL = "../api/generate-question.json";
 
   try {
     const res = await fetch(PROXY_URL);
-    
+
     if (!res.ok) {
       throw new Error(`Failed to fetch quiz (Status: ${res.status})`);
     }
 
     // This array holds the 10 question objects returned from the proxy
-    quizData = await res.json(); 
-    
+    quizData = await res.json();
+
     // Start the quiz by rendering the first question
     renderQuestion(quizData[currentQuestionIndex]);
     startTimer(); // Start timer
     
+    // Entrance animation for the first question
+    if (quizSection) {
+      quizSection.classList.remove("transition-out");
+      quizSection.classList.add("transition-in");
+    }
+    // kick off ambient thunder sfx/flashes (optional)
+    scheduleAtmosphericThunder();
   } catch (error) {
-    questionEl.textContent = '💀 Failed to summon questions. Check the console and proxy server URL.';
+    questionEl.textContent =
+      "💀 Failed to summon questions. Check the console and proxy server URL.";
     console.error("Error fetching quiz data:", error);
-    startBtn.textContent = 'Try Again';
-    startBtn.classList.remove('hidden'); 
+    startBtn.textContent = "Try Again";
+    startBtn.classList.remove("hidden");
   }
 }
 
@@ -70,16 +100,18 @@ function startTimer() {
 
 function renderQuestion(data) {
   // Display the current question text and index
-  questionEl.textContent = `Question ${currentQuestionIndex + 1}/${totalQuestions}: ${data.question}`;
-  optionsEl.innerHTML = ''; 
+  questionEl.textContent = `Question ${
+    currentQuestionIndex + 1
+  }/${totalQuestions}: ${data.question}`;
+  optionsEl.innerHTML = "";
 
   // Create button for each option
-  (data.options || []).forEach(option => {
-    const btn = document.createElement('button');
+  (data.options || []).forEach((option) => {
+    const btn = document.createElement("button");
     btn.textContent = option;
     // We attach the correct answer to every button's dataset for easy checking
-    btn.setAttribute('data-answer', data.answer);
-    btn.addEventListener('click', handleAnswerClick);
+    btn.setAttribute("data-answer", data.answer);
+    btn.addEventListener("click", handleAnswerClick);
     optionsEl.appendChild(btn);
   });
 }
@@ -87,36 +119,70 @@ function renderQuestion(data) {
 function handleAnswerClick(event) {
   const selectedBtn = event.currentTarget;
   const selectedAnswer = selectedBtn.textContent;
-  const correctAnswer = selectedBtn.getAttribute('data-answer');
-  
+  const correctAnswer = selectedBtn.getAttribute("data-answer");
+
   // Disable all options immediately to prevent multiple clicks
-  Array.from(optionsEl.children).forEach(btn => btn.disabled = true);
+  Array.from(optionsEl.children).forEach((btn) => (btn.disabled = true));
 
   if (selectedAnswer === correctAnswer) {
     score++;
-    selectedBtn.style.backgroundColor = 'var(--green-color)'; // Visual feedback
+    selectedBtn.style.backgroundColor = "var(--green-color)"; // Visual feedback
+    audio.play("correct", { volume: 0.9 });  // Play correct answer sound
   } else {
-    selectedBtn.style.backgroundColor = 'var(--orange-color)';
+    selectedBtn.style.backgroundColor = "var(--orange-color)";
     // Highlight the correct answer for the user
-    const correctEl = Array.from(optionsEl.children).find(btn => btn.textContent === correctAnswer);
+    const correctEl = Array.from(optionsEl.children).find(
+      (btn) => btn.textContent === correctAnswer
+    );
     if (correctEl) {
-        correctEl.style.border = '2px solid var(--green-color)';
+      correctEl.style.border = "2px solid var(--green-color)";
     }
+    audio.play("wrong", { volume: 0.8 });   // Play wrong answer sound
   }
-  
+
   // Pause for visual feedback, then move to the next state
   setTimeout(advanceQuiz, 800);
 }
 
 function advanceQuiz() {
-  currentQuestionIndex++;
+  // Play the spooky exit for the current question
+  if (quizSection) {
+    quizSection.classList.remove("transition-in");
+    quizSection.classList.add("transition-out");
+  }
 
-  if (currentQuestionIndex < totalQuestions) {
-    renderQuestion(quizData[currentQuestionIndex]);
+  const proceed = () => {
+    currentQuestionIndex++;
+
+    if (currentQuestionIndex < totalQuestions) {
+      // Render next question, then animate it in
+      renderQuestion(quizData[currentQuestionIndex]);
+
+      // Next tick to ensure DOM updated before animating in
+      requestAnimationFrame(() => {
+        if (quizSection) {
+          quizSection.classList.remove("transition-out");
+          quizSection.classList.add("transition-in");
+        }
+      });
+    } else {
+      if (quizSection)
+        quizSection.classList.remove("transition-out", "transition-in");
+      showResult();
+    }
+  };
+
+  // If animation exists, wait for it; otherwise proceed immediately
+  if (
+    quizSection &&
+    window.matchMedia("(prefers-reduced-motion: no-preference)").matches
+  ) {
+    quizSection.addEventListener("animationend", proceed, { once: true });
   } else {
-    showResult();
+    proceed();
   }
 }
+
 
 function showResult() {
   questionEl.textContent = '';
@@ -137,12 +203,190 @@ function showResult() {
   } else {
     message = '💀 Better luck next haunt! The witches turned you into a toad.';
   }
+  questionEl.textContent = "";
+  optionsEl.innerHTML = "";
+
+  let message = "";
+  if (score === totalQuestions)
+    message = "👑 Monster Mash King/Queen! A perfect 10/10 haul!";
+  else if (score >= 7)
+    message = "🎃 Pumpkin Master! You earned a massive candy haul.";
+  else if (score >= 4)
+    message = "👻 Ghostly Good! You survived the night with a few scares.";
+  else
+    message = "💀 Better luck next haunt! The witches turned you into a toad.";
 
   // Display the final score and message
   resultEl.innerHTML = `<h2>Your Score: ${score}/${totalQuestions}</h2><p>${message}</p>`;
-  resultEl.classList.remove('hidden');
-  
+  resultEl.classList.remove("hidden");
+
+  audio.play("victory", { volume: 0.9 }); // Play victory sound at the end of the quiz
+
+
   // Reset button for a new game
-  startBtn.textContent = 'Play Again';
-  startBtn.classList.remove('hidden');
+  startBtn.textContent = "Play Again";
+  startBtn.classList.remove("hidden");
 }
+
+// --- SFX ---
+const audio = {
+  enabled: () => (hasSfxToggle ? sfxToggle?.checked ?? true : true),
+  pool: {},
+  active: [],
+
+  play(name, { volume = 0.9 } = {}) {
+    if (!this.enabled()) return;
+    let el;
+    if (Array.isArray(this.pool[name])) {
+      el =
+        this.pool[name][
+          Math.floor(Math.random() * this.pool[name].length)
+        ].cloneNode();
+    } else {
+      el = this.pool[name]?.cloneNode();
+    }
+    if (!el) return;
+
+    el.volume = volume;
+    el.dataset.name = name; // tag it so we can stop by name
+    this.active.push(el);
+    el.addEventListener("ended", () => {
+      this.active = this.active.filter((a) => a !== el);
+    });
+    el.play().catch(() => {});
+  },
+
+  stop(name) {
+    // stop by name (or all if name omitted)
+    this.active = this.active.filter((el) => {
+      const match = !name || el.dataset.name === name;
+      if (match) {
+        try {
+          el.pause();
+          el.currentTime = 0;
+        } catch {}
+      }
+      return !match;
+    });
+  },
+};
+
+
+function initAudio() {
+  audio.pool.click = new Audio("/public/sfx/click.mp3.wav");
+  audio.pool.correct = new Audio("/public/sfx/correct.mp3.wav");
+  audio.pool.wrong = new Audio("/public/sfx/wrong.mp3.mp3");
+  audio.pool.victory = new Audio("/public/sfx/victory.mp3.wav");
+  audio.pool.thunder = [
+    new Audio("/public/sfx/thunder1.mp3.wav"),
+    new Audio("/public/sfx/thunder2.mp3.aiff"),
+  ];
+}
+
+function scheduleAtmosphericThunder() {
+  clearTimeout(thunderTimer);
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const minMs = 10000,
+    maxMs = 20000;
+  const next = Math.floor(Math.random() * (maxMs - minMs)) + minMs;
+  thunderTimer = setTimeout(() => {
+    if (!document.hidden) {
+      if (!reduced && (hasFlashToggle ? flashToggle.checked : true))
+        lightningFlash();
+      audio.play("thunder", { volume: 1});
+    }
+    scheduleAtmosphericThunder();
+  }, next);
+}
+
+function cancelAtmosphericThunder() {
+  clearTimeout(thunderTimer);
+}
+
+function lightningFlash() {
+  if (hasFlashToggle && !flashToggle.checked) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (!lightningOverlay) return;
+  lightningOverlay.classList.remove("flash");
+  void lightningOverlay.offsetWidth;
+  lightningOverlay.classList.add("flash");
+}
+
+
+   // === Spooky Cursor (toggleable) ===
+(function setupSpookyCursorToggle(){
+  if (!cursorToggle) return; // no toggle in DOM, skip
+
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const pointerFine   = window.matchMedia('(pointer: fine)').matches;
+
+  let layer = null;
+  let onMove = null;
+  const MAX_NODES = 40;
+  const USE_BATS  = true; // set true for 🦇 instead of wisps
+
+  
+  function startCursorTrail(){
+    if (reducedMotion || !pointerFine) return;
+    if (layer) return; // already on
+
+    layer = document.createElement('div');
+    layer.className = 'cursor-trail';
+    document.body.appendChild(layer);
+
+    let lastX = 0, lastY = 0, lastTime = 0;
+
+    function makeWisp(x, y) {
+      const el = document.createElement('div');
+      el.className = 'trail-dot';
+      el.style.left = x + 'px';
+      el.style.top  = y + 'px';
+      const size = 8 + Math.random() * 10;
+      el.style.width = el.style.height = size + 'px';
+      layer.appendChild(el);
+      setTimeout(() => el.remove(), 500);
+    }
+
+    function makeBat(x, y) {
+      const el = document.createElement('div');
+      el.className = 'trail-bat';
+      el.textContent = '🦇';
+      el.style.left = x + 'px';
+      el.style.top  = y + 'px';
+      layer.appendChild(el);
+      setTimeout(() => el.remove(), 800);
+    }
+
+    onMove = (e) => {
+      const now = performance.now();
+      const { clientX:x, clientY:y } = e;
+      const dx = x - lastX, dy = y - lastY;
+      const dist = Math.hypot(dx, dy);
+      if (now - lastTime < 14 && dist < 6) return;
+
+      (USE_BATS && Math.random() < 0.12) ? makeBat(x, y) : makeWisp(x, y);
+      lastX = x; lastY = y; lastTime = now;
+
+      while (layer.childElementCount > MAX_NODES) {
+        layer.firstElementChild?.remove();
+      }
+    };
+
+    window.addEventListener('mousemove', onMove, { passive: true });
+  }
+
+  function stopCursorTrail(){
+    if (onMove) window.removeEventListener('mousemove', onMove);
+    onMove = null;
+    if (layer) layer.remove();
+    layer = null;
+  }
+
+  // toggle handler
+  cursorToggle.addEventListener('change', () => {
+    cursorToggle.checked ? startCursorTrail() : stopCursorTrail();
+  });
+
+  // initialize based on toggle state
+  if (cursorToggle.checked) startCursorTrail();
+})();
