@@ -127,23 +127,32 @@ z-index: 9999;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
-  align-items: center;
+  /*align-items: center;*/
 }
 .coders {
   float: left;
-  min-height: 120px;
+  /*display: flex;*/
+  min-height: 20%;
+ /* vertical-align: center;
+  
+  align-items: center;*/
   
 }
 .coders img {
-  width: 104px;
+  width: 80%;
   height: auto;
+  vertical-align: center;
+  
   
 }
 .coderscontainer {
   /*position: relative;*/
-  min-height: 130px;
-  min-width: 30%;
+  display: flex;
+  height: 10rem;
+  width: 18rem;
   margin: 1rem;
+  padding: 0%;
+  align-items: center;
   
 }
 #aziz {
