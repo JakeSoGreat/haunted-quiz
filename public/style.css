@@ -133,6 +133,7 @@ z-index: 9999;
   float: left;
   /*display: flex;*/
   min-height: 20%;
+  width:30%
  /* vertical-align: center;
   
   align-items: center;*/
@@ -169,4 +170,15 @@ z-index: 9999;
 }
 #luisa {
   background-color:rgb(236, 204, 236);
+}
+.coderinfo {
+  width: 70%;
+  
+  
+ 
+  
+  
+}
+.coderinfo a {
+  text-decoration: none;
 }
