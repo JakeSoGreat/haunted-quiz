@@ -3,8 +3,16 @@ let score = 0;
 let currentQuestionIndex = 0;
 const totalQuestions = 10; // Updated to 10 questions per team decision
 let quizData = []; // Array to hold all 10 questions fetched from the proxy
+let timeLeft = 120; // 2 minute timer
+let timerInterval;
 
 // --- DOM ELEMENTS ---
+const startBtn = document.getElementById('start-btn');
+const questionEl = document.getElementById('question');
+const optionsEl = document.getElementById('options');
+const resultEl = document.getElementById('result');
+const timerEl = document.getElementById('timer');
+
 const startBtn = document.getElementById("start-btn");
 const questionEl = document.getElementById("question");
 const optionsEl = document.getElementById("options");
@@ -57,6 +65,8 @@ async function startQuiz() {
 
     // Start the quiz by rendering the first question
     renderQuestion(quizData[currentQuestionIndex]);
+    startTimer(); // Start timer
+    
     // Entrance animation for the first question
     if (quizSection) {
       quizSection.classList.remove("transition-out");
@@ -71,6 +81,21 @@ async function startQuiz() {
     startBtn.textContent = "Try Again";
     startBtn.classList.remove("hidden");
   }
+}
+
+// --- TIMER FUNCTION ---
+function startTimer() {
+  timerEl.textContent = `Time Left: ${timeLeft}s`;
+
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    timerEl.textContent = `Time Left: ${timeLeft}s`;
+
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      showResult(true); // Time’s up
+    }
+  }, 1000);
 }
 
 function renderQuestion(data) {
@@ -160,6 +185,24 @@ function advanceQuiz() {
 
 
 function showResult() {
+  questionEl.textContent = '';
+  optionsEl.innerHTML = '';
+  timerEl.textContent = '';
+
+
+  let message = '';
+
+  if (timeUp) {
+    message = '⏰ Time’s up! The ghosts took over the quiz!';
+  } else if (score === totalQuestions) {
+    message = '👑 Monster Mash King/Queen! A perfect 10/10 haul!';
+  } else if (score >= 7) {
+    message = '🎃 Pumpkin Master! You earned a massive candy haul.';
+  } else if (score >= 4) {
+    message = '👻 Ghostly Good! You survived the night with a few scares.';
+  } else {
+    message = '💀 Better luck next haunt! The witches turned you into a toad.';
+  }
   questionEl.textContent = "";
   optionsEl.innerHTML = "";
 
