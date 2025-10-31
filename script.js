@@ -12,6 +12,7 @@ let timerInterval = null;
 
 /* ---------- DOM Elements ---------- */
 const startBtn = document.getElementById('start-btn');
+const startBtnInQuiz = document.getElementById('start-btn-in-quiz'); // NEW: Button inside the quiz section
 const restartBtn = document.getElementById('restart');
 const timerDisplay = document.getElementById('timer');
 const scoreDisplay = document.getElementById('score');
@@ -258,6 +259,9 @@ function startTimer(initial = 120) {
 
 /* ---------- Render Question ---------- */
 function renderQuestion(q) {
+  // Hide the start button in the quiz section once rendering starts
+  if (startBtnInQuiz) startBtnInQuiz.classList.add('hidden');
+  
   if (!q) {
     endQuiz();
     return;
@@ -398,6 +402,10 @@ async function startQuiz() {
   currentIndex = 0;
   updateScoreDisplay();
 
+  // Hide both start buttons
+  if (startBtn) startBtn.classList.add('hidden');
+  if (startBtnInQuiz) startBtnInQuiz.classList.add('hidden'); // Ensure the quiz section button is hidden
+  
   // Show loading
   showPage('quiz');
   if (questionContainer) {
@@ -428,8 +436,10 @@ async function startQuiz() {
     console.error('Error starting quiz:', error);
     if (questionContainer) {
       questionContainer.innerHTML = '<p>💀 Failed to summon questions. Check the console.</p>';
+      // Show the start button again on failure
+      if (startBtnInQuiz) startBtnInQuiz.classList.remove('hidden'); 
     }
-    showPage('home');
+    // No need to show page 'home' since we are already on 'quiz' page
   }
 }
 
@@ -458,13 +468,27 @@ document.addEventListener('DOMContentLoaded', () => {
           clearInterval(timerInterval);
         }
         if (navList) navList.classList.remove('open');
+        
+        // When navigating to the quiz page, ensure the start button is visible
+        if (id === 'quiz' && startBtnInQuiz) {
+            startBtnInQuiz.classList.remove('hidden');
+        }
+        
       });
     });
   }
 
-  // Start button
+  // Start button (Home page)
   if (startBtn) {
     startBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      startQuiz();
+    });
+  }
+  
+  // Start button (Quiz page)
+  if (startBtnInQuiz) {
+    startBtnInQuiz.addEventListener('click', (e) => {
       e.preventDefault();
       startQuiz();
     });

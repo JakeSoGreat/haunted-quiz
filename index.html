@@ -14,14 +14,14 @@
   <body>
     <!-- Lightning Overlay -->
     <div id="lightning-overlay"></div>
-
+    
     <!-- Navbar (SPA navigation handled in JS) -->
     <header class="navbar">
       <!-- Logo -->
       <div class="logo">Haunted 🎃 Quiz</div>
       <!-- SFX Controls -->
       <div class="sfx-controls">
-        <!-- Cursor Toggle -->
+        <!-- New Cursor Toggle (Hidden on small screens via CSS) -->
         <label class="toggle">
           <input type="checkbox" id="cursor-toggle" checked />
           <span>🕯️ Spooky Cursor</span>
@@ -54,6 +54,7 @@
           Each round is freshly generated, so no two quizzes are ever the same. Can you survive the night and claim the
           ultimate candy haul?<br>
         </p>
+        <!-- This is the primary start button -->
         <button id="start-btn">Start Quiz</button>
       </section>
 
@@ -66,25 +67,29 @@
         </div>
 
         <div id="questionContainer">
+          <!-- Text for pre-start state -->
           <p>Press <strong>Start</strong> to summon your first spooky question...</p>
+          
+          <!-- Secondary start button for users who navigate directly to the Play section -->
+          <button id="start-btn-in-quiz">Start</button>
         </div>
       </section>
 
       <!-- RESULTS SECTION -->
       <section id="result" class="page hidden">
-        <h1>Your Results</h1>
+        <h2>Your Results</h2>
         <p id="finalScore"></p>
         <button id="restart">Try Again</button>
       </section>
 
       <!-- MEET THE CODERS -->
       <section id="meet" class="page hidden">
-        <h1>Meet the Coders</h1>
+        <h2>Meet the Coders 🧛‍♀️</h2>
         <p>Team Spooky: fueled by caffeine, code, and chaos!</p>
       </section>
     </main>
 
     <!-- JS -->
-    <script src="./script.js" defer></script>
+    <script src="./script.js"></script>
   </body>
 </html>
