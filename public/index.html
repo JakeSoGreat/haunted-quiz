@@ -1,56 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Haunted 🎃 Quiz</title>
-    <link rel="stylesheet" href="/public/style.css" />
-  </head>
-  <body>
-    <main class="quiz-container" role="main">
-      <h1>👻 Haunted Quiz</h1>
 
-      <section id="quiz" aria-live="polite">
-        <p id="question">
-          Press <strong>Start</strong> to summon your first spooky question…
-        </p>
-        <div
-          id="options"
-          class="options"
-          role="group"
-          aria-label="Answer choices"
-        ></div>
-      </section>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Haunted 🎃 Quiz</title>
+  <link rel="stylesheet" href="/public/style.css" />
+</head>
 
-      <div id="controls" class="controls">
-        <!-- 🔊 SFX + ⚡ Flash toggles -->
-        <div class="toggles">
-          <label class="toggle">
-            <input type="checkbox" id="sfx-toggle" checked />
-            <span>🔊 Spooky SFX</span>
-          </label>
-          <label class="toggle">
-            <input type="checkbox" id="flash-toggle" checked />
-            <span>⚡ Lightning Flashes</span>
-          </label>
-        </div>
+<body>
+  <main class="quiz-container" role="main">
+    <h1>Haunted Quiz</h1>
+    <p>
+      Welcome to the Haunted Quiz! Test your spooky smarts with 10 eerie multiple-choice questions, conjured by OpenAI’s
+      spectral intelligence.<br>
+      Each round is freshly generated, so no two quizzes are ever the same. Can you survive the night and claim the
+      ultimate candy haul?<br>
+    </p>
+    <a href="game.html">
+      <button type="button" style="font-size:1.3em; margin-top:30px;">
+        Enter if you dare
+      </button>
+    </a>
+  </main>
+</body>
 
-        <div id="progress" class="progress" aria-hidden="true"></div>
-        <button id="start-btn" type="button">Start Quiz</button>
-      </div>
-
-      <section id="result" class="hidden" aria-live="polite"></section>
-    </main>
-
-    <!-- ⚡ Lightning overlay for screen flashes -->
-    <div id="lightning-overlay" aria-hidden="true"></div>
-
-    <noscript>
-      <p style="color: #f9c80e; text-align: center; margin-top: 1em;">
-        ⚠️ JavaScript is required to summon the Haunted Quiz spirits!
-      </p>
-    </noscript>
-
-    <script src="/public/script.js" defer></script>
-  </body>
 </html>

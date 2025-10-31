@@ -9,6 +9,7 @@ const startBtn = document.getElementById("start-btn");
 const questionEl = document.getElementById("question");
 const optionsEl = document.getElementById("options");
 const resultEl = document.getElementById("result");
+
 // --- SFX and Visual Effects Elements ---
 const lightningOverlay = document.getElementById("lightning-overlay");
 const sfxToggle = document.getElementById("sfx-toggle");
@@ -17,6 +18,8 @@ let thunderTimer = null;
 
 const hasSfxToggle = !!sfxToggle;
 const hasFlashToggle = !!flashToggle;
+const cursorToggle = document.getElementById("cursor-toggle");
+
 // transistion sfx ---
 const quizSection = document.getElementById("quiz");
 
@@ -267,4 +270,79 @@ function lightningFlash() {
 }
 
 
-  
+   // === Spooky Cursor (toggleable) ===
+(function setupSpookyCursorToggle(){
+  if (!cursorToggle) return; // no toggle in DOM, skip
+
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const pointerFine   = window.matchMedia('(pointer: fine)').matches;
+
+  let layer = null;
+  let onMove = null;
+  const MAX_NODES = 40;
+  const USE_BATS  = true; // set true for 🦇 instead of wisps
+
+  function startCursorTrail(){
+    if (reducedMotion || !pointerFine) return;
+    if (layer) return; // already on
+
+    layer = document.createElement('div');
+    layer.className = 'cursor-trail';
+    document.body.appendChild(layer);
+
+    let lastX = 0, lastY = 0, lastTime = 0;
+
+    function makeWisp(x, y) {
+      const el = document.createElement('div');
+      el.className = 'trail-dot';
+      el.style.left = x + 'px';
+      el.style.top  = y + 'px';
+      const size = 8 + Math.random() * 10;
+      el.style.width = el.style.height = size + 'px';
+      layer.appendChild(el);
+      setTimeout(() => el.remove(), 500);
+    }
+
+    function makeBat(x, y) {
+      const el = document.createElement('div');
+      el.className = 'trail-bat';
+      el.textContent = '🦇';
+      el.style.left = x + 'px';
+      el.style.top  = y + 'px';
+      layer.appendChild(el);
+      setTimeout(() => el.remove(), 800);
+    }
+
+    onMove = (e) => {
+      const now = performance.now();
+      const { clientX:x, clientY:y } = e;
+      const dx = x - lastX, dy = y - lastY;
+      const dist = Math.hypot(dx, dy);
+      if (now - lastTime < 14 && dist < 6) return;
+
+      (USE_BATS && Math.random() < 0.12) ? makeBat(x, y) : makeWisp(x, y);
+      lastX = x; lastY = y; lastTime = now;
+
+      while (layer.childElementCount > MAX_NODES) {
+        layer.firstElementChild?.remove();
+      }
+    };
+
+    window.addEventListener('mousemove', onMove, { passive: true });
+  }
+
+  function stopCursorTrail(){
+    if (onMove) window.removeEventListener('mousemove', onMove);
+    onMove = null;
+    if (layer) layer.remove();
+    layer = null;
+  }
+
+  // toggle handler
+  cursorToggle.addEventListener('change', () => {
+    cursorToggle.checked ? startCursorTrail() : stopCursorTrail();
+  });
+
+  // initialize based on toggle state
+  if (cursorToggle.checked) startCursorTrail();
+})();
