@@ -9,6 +9,7 @@ const startBtn = document.getElementById("start-btn");
 const questionEl = document.getElementById("question");
 const optionsEl = document.getElementById("options");
 const resultEl = document.getElementById("result");
+
 // --- SFX and Visual Effects Elements ---
 const lightningOverlay = document.getElementById("lightning-overlay");
 const sfxToggle = document.getElementById("sfx-toggle");
@@ -17,6 +18,8 @@ let thunderTimer = null;
 
 const hasSfxToggle = !!sfxToggle;
 const hasFlashToggle = !!flashToggle;
+const cursorToggle = document.getElementById("cursor-toggle");
+
 // transistion sfx ---
 const quizSection = document.getElementById("quiz");
 
@@ -28,6 +31,7 @@ startBtn.addEventListener("click", startQuiz);
 async function startQuiz() {
   // Prime audio on user gesture
   if (!audio.pool.click) initAudio();
+  audio.stop("victory");  // Stop any lingering victory sounds
   audio.play("click", { volume: 0.5 });
   score = 0;
   currentQuestionIndex = 0;
@@ -185,6 +189,8 @@ function showResult() {
 const audio = {
   enabled: () => (hasSfxToggle ? sfxToggle?.checked ?? true : true),
   pool: {},
+  active: [],
+
   play(name, { volume = 0.9 } = {}) {
     if (!this.enabled()) return;
     let el;
@@ -197,10 +203,31 @@ const audio = {
       el = this.pool[name]?.cloneNode();
     }
     if (!el) return;
+
     el.volume = volume;
+    el.dataset.name = name; // tag it so we can stop by name
+    this.active.push(el);
+    el.addEventListener("ended", () => {
+      this.active = this.active.filter((a) => a !== el);
+    });
     el.play().catch(() => {});
   },
+
+  stop(name) {
+    // stop by name (or all if name omitted)
+    this.active = this.active.filter((el) => {
+      const match = !name || el.dataset.name === name;
+      if (match) {
+        try {
+          el.pause();
+          el.currentTime = 0;
+        } catch {}
+      }
+      return !match;
+    });
+  },
 };
+
 
 function initAudio() {
   audio.pool.click = new Audio("/public/sfx/click.mp3.wav");
@@ -223,7 +250,7 @@ function scheduleAtmosphericThunder() {
     if (!document.hidden) {
       if (!reduced && (hasFlashToggle ? flashToggle.checked : true))
         lightningFlash();
-      audio.play("thunder", { volume: 0.65 });
+      audio.play("thunder", { volume: 1});
     }
     scheduleAtmosphericThunder();
   }, next);
@@ -243,4 +270,80 @@ function lightningFlash() {
 }
 
 
+   // === Spooky Cursor (toggleable) ===
+(function setupSpookyCursorToggle(){
+  if (!cursorToggle) return; // no toggle in DOM, skip
+
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const pointerFine   = window.matchMedia('(pointer: fine)').matches;
+
+  let layer = null;
+  let onMove = null;
+  const MAX_NODES = 40;
+  const USE_BATS  = true; // set true for 🦇 instead of wisps
+
   
+  function startCursorTrail(){
+    if (reducedMotion || !pointerFine) return;
+    if (layer) return; // already on
+
+    layer = document.createElement('div');
+    layer.className = 'cursor-trail';
+    document.body.appendChild(layer);
+
+    let lastX = 0, lastY = 0, lastTime = 0;
+
+    function makeWisp(x, y) {
+      const el = document.createElement('div');
+      el.className = 'trail-dot';
+      el.style.left = x + 'px';
+      el.style.top  = y + 'px';
+      const size = 8 + Math.random() * 10;
+      el.style.width = el.style.height = size + 'px';
+      layer.appendChild(el);
+      setTimeout(() => el.remove(), 500);
+    }
+
+    function makeBat(x, y) {
+      const el = document.createElement('div');
+      el.className = 'trail-bat';
+      el.textContent = '🦇';
+      el.style.left = x + 'px';
+      el.style.top  = y + 'px';
+      layer.appendChild(el);
+      setTimeout(() => el.remove(), 800);
+    }
+
+    onMove = (e) => {
+      const now = performance.now();
+      const { clientX:x, clientY:y } = e;
+      const dx = x - lastX, dy = y - lastY;
+      const dist = Math.hypot(dx, dy);
+      if (now - lastTime < 14 && dist < 6) return;
+
+      (USE_BATS && Math.random() < 0.12) ? makeBat(x, y) : makeWisp(x, y);
+      lastX = x; lastY = y; lastTime = now;
+
+      while (layer.childElementCount > MAX_NODES) {
+        layer.firstElementChild?.remove();
+      }
+    };
+
+    window.addEventListener('mousemove', onMove, { passive: true });
+  }
+
+  function stopCursorTrail(){
+    if (onMove) window.removeEventListener('mousemove', onMove);
+    onMove = null;
+    if (layer) layer.remove();
+    layer = null;
+  }
+
+  // toggle handler
+  cursorToggle.addEventListener('change', () => {
+    cursorToggle.checked ? startCursorTrail() : stopCursorTrail();
+  });
+
+  // initialize based on toggle state
+  if (cursorToggle.checked) startCursorTrail();
+})();
