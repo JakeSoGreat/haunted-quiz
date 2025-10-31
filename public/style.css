@@ -123,6 +123,12 @@ z-index: 9999;
   }
 }
 /* style for coders page*/
+.coderpage {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: center;
+}
 .coders {
   float: left;
   min-height: 120px;
@@ -134,8 +140,11 @@ z-index: 9999;
   
 }
 .coderscontainer {
-  position: relative;
+  /*position: relative;*/
   min-height: 130px;
+  min-width: 30%;
+  margin: 1rem;
+  
 }
 #aziz {
   background-color: rgb(236, 204, 236);
