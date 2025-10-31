@@ -1,5 +1,4 @@
-/* 
-  === Hack or Treat Quiz - SPA with SFX Integration ===
+/* === Hack or Treat Quiz - SPA with SFX Integration ===
   Merges SPA functionality with audio effects and visual animations
 */
 
@@ -25,6 +24,7 @@ const quizSection = document.getElementById('quiz');
 const lightningOverlay = document.getElementById('lightning-overlay');
 const sfxToggle = document.getElementById('sfx-toggle');
 const flashToggle = document.getElementById('flash-toggle');
+const cursorToggle = document.getElementById('cursor-toggle'); // NEW: Cursor toggle
 let thunderTimer = null;
 
 const hasSfxToggle = !!sfxToggle;
@@ -58,6 +58,93 @@ function initAudio() {
     new Audio('./sfx/thunder2.mp3.aiff'),
   ];
 }
+
+/* ---------- Spooky Cursor Logic (Injected) ---------- */
+// === Spooky Cursor (toggleable) ===
+function setupSpookyCursorToggle(){
+  if (!cursorToggle) return; // no toggle in DOM, skip
+
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const pointerFine   = window.matchMedia('(pointer: fine)').matches;
+
+  let layer = null;
+  let onMove = null;
+  const MAX_NODES = 40;
+  const USE_BATS  = true; // set true for 🦇 instead of wisps
+
+  // Hide the default cursor when the trail is active
+  function updateBodyCursor(showDefault) {
+    document.body.style.cursor = showDefault ? 'default' : 'none';
+  }
+  
+  function startCursorTrail(){
+    if (reducedMotion || !pointerFine) return;
+    if (layer) return; // already on
+
+    layer = document.createElement('div');
+    layer.className = 'cursor-trail';
+    document.body.appendChild(layer);
+    updateBodyCursor(false); // Hide default cursor
+
+    let lastX = 0, lastY = 0, lastTime = 0;
+
+    function makeWisp(x, y) {
+      const el = document.createElement('div');
+      el.className = 'trail-dot';
+      el.style.left = x + 'px';
+      el.style.top  = y + 'px';
+      const size = 8 + Math.random() * 10;
+      el.style.width = el.style.height = size + 'px';
+      layer.appendChild(el);
+      setTimeout(() => el.remove(), 500);
+    }
+
+    function makeBat(x, y) {
+      const el = document.createElement('div');
+      el.className = 'trail-bat';
+      el.textContent = '🦇';
+      el.style.left = x + 'px';
+      el.style.top  = y + 'px';
+      layer.appendChild(el);
+      setTimeout(() => el.remove(), 800);
+    }
+
+    onMove = (e) => {
+      const now = performance.now();
+      const { clientX:x, clientY:y } = e;
+      const dx = x - lastX, dy = y - lastY;
+      const dist = Math.hypot(dx, dy);
+      if (now - lastTime < 14 && dist < 6) return;
+
+      (USE_BATS && Math.random() < 0.12) ? makeBat(x, y) : makeWisp(x, y);
+      lastX = x; lastY = y; lastTime = now;
+
+      while (layer.childElementCount > MAX_NODES) {
+        layer.firstElementChild?.remove();
+      }
+    };
+
+    window.addEventListener('mousemove', onMove, { passive: true });
+  }
+
+  function stopCursorTrail(){
+    if (onMove) window.removeEventListener('mousemove', onMove);
+    onMove = null;
+    if (layer) layer.remove();
+    layer = null;
+    updateBodyCursor(true); // Restore default cursor
+  }
+
+  // toggle handler
+  cursorToggle.addEventListener('change', () => {
+    cursorToggle.checked ? startCursorTrail() : stopCursorTrail();
+  });
+
+  // initialize based on toggle state
+  if (cursorToggle.checked) startCursorTrail();
+}
+/* ---------- End Spooky Cursor Logic ---------- */
+
 
 /* ---------- Atmospheric Thunder System ---------- */
 function scheduleAtmosphericThunder() {
@@ -348,6 +435,9 @@ async function startQuiz() {
 
 /* ---------- Event Listeners ---------- */
 document.addEventListener('DOMContentLoaded', () => {
+  // Initialize cursor
+  setupSpookyCursorToggle();
+
   // Menu toggle (mobile)
   const menuToggle = document.getElementById('menu-toggle');
   const navList = document.getElementById('nav-links');

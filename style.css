@@ -7,7 +7,7 @@
   --black-color: #191102; /* smoky black */
   --green-color: #65ff00; /* slime green */
   --purple-color: #542e71; /* eminence purple */
-  --yellow-color: #f9c80e; /*  jonquil */
+  --yellow-color: #f9c80e; /* jonquil */
   --orange-color: #e05600; /* persimmon */
 
   /* Fonts */
@@ -49,14 +49,33 @@ p {
   font-size: 1.2em;
 }
 
-/* Navbar  */
+/* Navbar */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: var(--purple-color);
   padding: 10px 20px;
-  border-bottom: 2px solid var(--accent-color);
+  border-bottom: 2px solid var(--yellow-color);
+}
+
+.sfx-controls {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  font-size: 1em;
+  color: var(--yellow-color);
+}
+
+.sfx-controls label {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: color 0.2s;
+}
+.sfx-controls label:hover {
+  color: var(--green-color);
 }
 
 .navbar ul {
@@ -68,20 +87,20 @@ p {
 }
 
 .navbar a {
-  color: var(--highlight-color);
+  color: var(--yellow-color);
   text-decoration: none;
   font-weight: bold;
 }
 
 .navbar a:hover {
-  color: var(--text-color);
+  color: var(--green-color);
 }
 
 #menu-toggle {
   display: none;
   background: none;
   border: none;
-  color: var(--highlight-color);
+  color: var(--yellow-color);
   font-size: 1.5em;
 }
 
@@ -110,15 +129,15 @@ p {
 }
 
 #timer {
-  color: var(--danger-color);
+  color: var(--orange-color);
 }
 
 #score {
-  color: var(--highlight-color);
+  color: var(--yellow-color);
 }
 
-/* Buttons  */
-button {
+/* Buttons */
+button, .option-btn {
   background: var(--orange-color);
   color: var(--black-color);
   border: none;
@@ -126,12 +145,14 @@ button {
   margin: 10px;
   border-radius: 5px;
   font-weight: bold;
-  cursor: pointer;
-  transition: 0.2s;
+  cursor: pointer; /* Use default cursor for non-trail elements */
+  transition: background-color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 0 var(--yellow-color);
 }
 
-button:hover {
+button:hover, .option-btn:hover {
   background: var(--green-color);
+  box-shadow: 0 4px 0 var(--yellow-color);
 }
 
 .hidden {
@@ -166,7 +187,7 @@ z-index: 9999;
 100% { opacity: 0; }
 }
 
-
+/* Spooky floating effect */
 @media (prefers-reduced-motion: no-preference) {
 .quiz-container { animation: floaty 6s ease-in-out infinite; }
 }
@@ -213,4 +234,48 @@ z-index: 9999;
   #menu-toggle {
     display: block;
   }
+}
+
+/* === Spooky cursor trail (New) === */
+.cursor-trail {
+  position: fixed;
+  inset: 0;
+  pointer-events: none; /* don't block clicks */
+  z-index: 9998;
+}
+
+.trail-dot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  /* Using green color for the wisp trail */
+  background: radial-gradient(circle, rgba(101,255,0,0.95), rgba(101,255,0,0) 70%);
+  filter: blur(0.5px);
+  opacity: 0.9;
+  transform: translate(-50%, -50%) scale(1);
+  will-change: transform, opacity;
+  animation: wispFade 450ms ease-out forwards;
+}
+
+.trail-bat {
+  position: absolute;
+  font-size: 16px;
+  transform: translate(-50%, -50%) rotate(0deg) scale(1);
+  opacity: 0.95;
+  text-shadow: 0 0 6px rgba(101,255,0,0.6);
+  will-change: transform, opacity;
+  animation: batDrift 700ms ease-out forwards;
+}
+
+@keyframes wispFade {
+  to { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+}
+@keyframes batDrift {
+  to { opacity: 0; transform: translate(-50%, -80%) rotate(-12deg) scale(0.9); }
+}
+
+/* Respect reduced motion (New) */
+@media (prefers-reduced-motion: reduce) {
+  .cursor-trail { display: none; }
 }

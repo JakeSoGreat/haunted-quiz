@@ -21,6 +21,12 @@
       <div class="logo">Haunted 🎃 Quiz</div>
       <!-- SFX Controls -->
       <div class="sfx-controls">
+        <!-- Cursor Toggle -->
+        <label class="toggle">
+          <input type="checkbox" id="cursor-toggle" checked />
+          <span>🕯️ Spooky Cursor</span>
+        </label>
+        <!-- Existing Toggles -->
         <label title="Toggle sound effects">
           <input type="checkbox" id="sfx-toggle" checked> 🔊
         </label>
@@ -53,6 +59,7 @@
 
       <!-- QUIZ SECTION -->
       <section id="quiz" class="page hidden">
+        <h1>Spooky Quiz Time!</h1>
         <div class="quiz-info">
           <span id="timer">⏱️ 120s</span>
           <span id="score">Score: 0/10</span>
@@ -65,14 +72,14 @@
 
       <!-- RESULTS SECTION -->
       <section id="result" class="page hidden">
-        <h2>Your Results</h2>
+        <h1>Your Results</h1>
         <p id="finalScore"></p>
         <button id="restart">Try Again</button>
       </section>
 
       <!-- MEET THE CODERS -->
       <section id="meet" class="page hidden">
-        <h2>Meet the Coders 🧛‍♀️</h2>
+        <h1>Meet the Coders</h1>
         <p>Team Spooky: fueled by caffeine, code, and chaos!</p>
       </section>
     </main>
