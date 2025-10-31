@@ -14,19 +14,28 @@
   <body>
     <!-- Lightning Overlay -->
     <div id="lightning-overlay"></div>
-    
+
+    <!-- Page decorations -->
+    <div class="decorations">
+      <img src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/9648a7a2-03fe-4b48-b7ab-195ec34ac6a6" id="leftside" alt="halloween" />
+      <img src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/5c125b01-3bda-46ed-87bf-f64a9cc39d9b" id="rightside" alt="halloween" />
+      <img src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/5c7a5d00-501e-4f2b-b31a-0d0e2dac47e5" id="bottom" alt="halloween" />
+      <img src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/b8c09600-d3c2-4eab-a3e1-4f9a75d14331" id="leftpumpkin" alt="halloween" />
+      <img src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/dc895daa-7d0c-4b65-946c-36faecc1d78e" id="rightpumpkin" alt="halloween" />
+    </div>
+
     <!-- Navbar (SPA navigation handled in JS) -->
     <header class="navbar">
       <!-- Logo -->
       <div class="logo">Haunted 🎃 Quiz</div>
-      <!-- SFX Controls -->
+      <!-- User Controls -->
       <div class="sfx-controls">
-        <!-- New Cursor Toggle (Hidden on small screens via CSS) -->
+        <!-- Cursor Toggle (Hidden on small screens via CSS) -->
         <label class="toggle">
           <input type="checkbox" id="cursor-toggle" checked />
           <span>🕯️ Spooky Cursor</span>
         </label>
-        <!-- Existing Toggles -->
+        <!-- SFX Toggles -->
         <label title="Toggle sound effects">
           <input type="checkbox" id="sfx-toggle" checked> 🔊
         </label>
@@ -62,8 +71,8 @@
       <section id="quiz" class="page hidden">
         <h1>Spooky Quiz Time!</h1>
         <div class="quiz-info">
-          <span id="timer">⏱️ 120s</span>
-          <span id="score">Score: 0/10</span>
+          <span id="timer" class="gameplay">⏱️ 120s</span>
+          <span id="score" class="gameplay">Score: 0/10</span>
         </div>
 
         <div id="questionContainer">
@@ -84,7 +93,7 @@
 
       <!-- MEET THE CODERS -->
       <section id="meet" class="page hidden">
-        <h2>Meet the Coders 🧛‍♀️</h2>
+        <h1>Meet the Coders</h1>
         <p>Team Spooky: fueled by caffeine, code, and chaos!</p>
       </section>
     </main>

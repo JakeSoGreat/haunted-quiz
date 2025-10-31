@@ -23,6 +23,51 @@ body {
   text-align: center;
   padding: 0;
   margin: 0;
+  overflow: hidden; /* Prevent scrollbars from decorations */
+}
+
+main {
+  position: relative;
+  z-index: 10;
+  background-color: transparent; 
+  min-height: 100vh;
+  padding: 20px;
+}
+
+main {
+  background: src(decorations);
+}
+
+.decorations {
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1; 
+  pointer-events: none; /* Do not block clicks */
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100dvh;
+  background-image: linear-gradient(
+    to bottom,
+    #180930,
+    #2e1847,
+    #48275f,
+    #633677,
+    #81458f
+  );
+}
+
+.decorations > img {
+  position: absolute;
+  z-index: 2; 
+  pointer-events: none;
+  bottom: 0;
+  left: 0; 
+  width: 100%; 
+  height: auto;
 }
 
 .quiz-container {
@@ -31,6 +76,12 @@ body {
   padding: 20px;
   max-width: 600px;
   margin: 0 auto;
+}
+
+.gameplay{
+  padding: 20px;
+  border-radius: 30px;
+  background-color: var(--black-color);
 }
 
 h1 {
@@ -56,7 +107,9 @@ p {
   align-items: center;
   background: var(--purple-color);
   padding: 10px 20px;
-  border-bottom: 2px solid var(--yellow-color);
+  border-bottom: 2px solid var(--accent-color);
+  position: relative; 
+  z-index: 110;
 }
 
 .sfx-controls {
@@ -236,7 +289,7 @@ z-index: 9999;
   }
 }
 
-/* === Spooky cursor trail === */
+/* Spooky cursor trail */
 .cursor-trail {
   position: fixed;
   inset: 0;

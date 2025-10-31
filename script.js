@@ -1,4 +1,4 @@
-/* === Hack or Treat Quiz - SPA with SFX Integration ===
+/*  Haunted Quiz - SPA with SFX Integration
   Merges SPA functionality with audio effects and visual animations
 */
 
