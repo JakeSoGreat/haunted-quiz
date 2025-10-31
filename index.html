@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Head -->
+  <head>
+    <!-- Meta -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Title -->
+    <title>Haunted 🎃 Quiz</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <!-- Body -->
+  <body>
+    <!-- Lightning Overlay -->
+    <div id="lightning-overlay"></div>
+
+    <!-- Navbar (SPA navigation handled in JS) -->
+    <header class="navbar">
+      <!-- Logo -->
+      <div class="logo">Haunted 🎃 Quiz</div>
+      <!-- SFX Controls -->
+      <div class="sfx-controls">
+        <label title="Toggle sound effects">
+          <input type="checkbox" id="sfx-toggle" checked> 🔊
+        </label>
+        <label title="Toggle lightning flashes">
+          <input type="checkbox" id="flash-toggle" checked> ⚡
+        </label>
+      </div>
+      <!-- Nav Links -->
+      <button id="menu-toggle">☰</button>
+      <ul id="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#quiz">Play</a></li>
+        <li><a href="#meet">Meet the Coders</a></li>
+      </ul>
+    </header>
+
+    <!-- Main SPA sections -->
+    <main>
+      <!-- HOME SECTION -->
+      <section id="home" class="page active">
+        <h1>Haunted Quiz</h1>
+        <p>
+          Welcome to the Haunted Quiz! Test your spooky smarts with 10 eerie multiple-choice questions, conjured by OpenAI’s
+          spectral intelligence.<br>
+          Each round is freshly generated, so no two quizzes are ever the same. Can you survive the night and claim the
+          ultimate candy haul?<br>
+        </p>
+        <button id="start-btn">Start Quiz</button>
+      </section>
+
+      <!-- QUIZ SECTION -->
+      <section id="quiz" class="page hidden">
+        <div class="quiz-info">
+          <span id="timer">⏱️ 120s</span>
+          <span id="score">Score: 0/10</span>
+        </div>
+
+        <div id="questionContainer">
+          <p>Press <strong>Start</strong> to summon your first spooky question...</p>
+        </div>
+      </section>
+
+      <!-- RESULTS SECTION -->
+      <section id="result" class="page hidden">
+        <h2>Your Results</h2>
+        <p id="finalScore"></p>
+        <button id="restart">Try Again</button>
+      </section>
+
+      <!-- MEET THE CODERS -->
+      <section id="meet" class="page hidden">
+        <h2>Meet the Coders 🧛‍♀️</h2>
+        <p>Team Spooky: fueled by caffeine, code, and chaos!</p>
+      </section>
+    </main>
+
+    <!-- JS -->
+    <script src="./script.js" defer></script>
+  </body>
+</html>
