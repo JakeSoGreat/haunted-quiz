@@ -35,11 +35,17 @@ h1 {
   font-family: var(--font-heading);
   font-size: 3em;
   margin-bottom: 20px;
+  background: linear-gradient(180deg, var(--yellow-color), var(--green-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
 }
 
 p {
   font-family: var(--font-mono);
   font-size: 1.2em;
+  text-shadow: 2px 2px 4px black;
 }
 
 button {
