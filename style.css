@@ -34,10 +34,6 @@ main {
   padding: 20px;
 }
 
-main {
-  background: src(decorations);
-}
-
 .decorations {
   position: fixed; 
   top: 0;
@@ -269,6 +265,9 @@ z-index: 9999;
 
 /* Responsive Navbar */
 @media (max-width: 600px) {
+  body {
+    overflow: auto;
+  }
   .navbar ul {
     display: none;
     flex-direction: column;
@@ -286,6 +285,10 @@ z-index: 9999;
 
   #menu-toggle {
     display: block;
+  }
+
+  h1 {
+    font-size: 2.5em;
   }
 }
 
