@@ -262,9 +262,10 @@ After deploying to Vercel/Netlify:
 Team12 - Hack or Treat Hackathon 2025
 - [Luisa](https://github.com/louisae452)
 - [Jake](https://github.com/JakeSoGreat)
+- [Ciaran](https://github.com/ciarangriffin93)
 - [Daniel]() <!-- TODO: Add Daniels GH link -->
 - [Aziz](https://github.com/aziz-ibrahim)
-- [Ciaran](https://github.com/ciarangriffin93)
+
 
 ## 📝 License
 
