@@ -501,6 +501,8 @@ document.addEventListener('DOMContentLoaded', () => {
       showPage('home');
       cancelAtmosphericThunder();
       clearInterval(timerInterval);
+      cancelAtmosphericThunder();
+      startQuiz();
     });
   }
 });
