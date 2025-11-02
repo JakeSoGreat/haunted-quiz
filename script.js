@@ -60,18 +60,17 @@ function initAudio() {
   ];
 }
 
-/* ---------- Spooky Cursor Logic (Injected) ---------- */
-// === Spooky Cursor (toggleable) ===
+/* ---------- Spooky Cursor Logic ---------- */
 function setupSpookyCursorToggle(){
   if (!cursorToggle) return; // no toggle in DOM, skip
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const pointerFine   = window.matchMedia('(pointer: fine)').matches;
+  const pointerFine = window.matchMedia('(pointer: fine)').matches;
 
   let layer = null;
   let onMove = null;
   const MAX_NODES = 40;
-  const USE_BATS  = true; // set true for 🦇 instead of wisps
+  const USE_BATS = true; // set true for 🦇 instead of wisps
 
   // Hide the default cursor when the trail is active
   function updateBodyCursor(showDefault) {
@@ -93,7 +92,7 @@ function setupSpookyCursorToggle(){
       const el = document.createElement('div');
       el.className = 'trail-dot';
       el.style.left = x + 'px';
-      el.style.top  = y + 'px';
+      el.style.top = y + 'px';
       const size = 8 + Math.random() * 10;
       el.style.width = el.style.height = size + 'px';
       layer.appendChild(el);
@@ -105,7 +104,7 @@ function setupSpookyCursorToggle(){
       el.className = 'trail-bat';
       el.textContent = '🦇';
       el.style.left = x + 'px';
-      el.style.top  = y + 'px';
+      el.style.top = y + 'px';
       layer.appendChild(el);
       setTimeout(() => el.remove(), 800);
     }
@@ -144,8 +143,6 @@ function setupSpookyCursorToggle(){
   // initialize based on toggle state
   if (cursorToggle.checked) startCursorTrail();
 }
-/* ---------- End Spooky Cursor Logic ---------- */
-
 
 /* ---------- Atmospheric Thunder System ---------- */
 function scheduleAtmosphericThunder() {
@@ -311,7 +308,10 @@ window.checkAnswer = function(selectedIndex) {
   
   if (isCorrect) {
     score++;
-    updateScoreDisplay();
+    // BUG FIX: Force immediate score update
+    if (scoreDisplay) {
+      scoreDisplay.textContent = `Score: ${score}/${totalQuestions}`;
+    }
     buttons[selectedIndex].style.backgroundColor = 'var(--green-color)';
     audio.play('correct', { volume: 0.9 });
   } else {
@@ -391,13 +391,46 @@ function endQuiz() {
   showPage('result');
 }
 
+/* ---------- Reset Quiz State ---------- */
+function resetQuizState() {
+  // Clear all timers and effects
+  clearInterval(timerInterval);
+  cancelAtmosphericThunder();
+  
+  // Reset state variables
+  score = 0;
+  currentIndex = 0;
+  questions = [];
+  
+  // Reset UI displays
+  if (scoreDisplay) scoreDisplay.textContent = 'Score: 0/10';
+  if (timerDisplay) {
+    timerDisplay.textContent = '⏱️ 120s';
+    timerDisplay.style.color = '';
+  }
+  
+  // Clear question container
+  if (questionContainer) {
+    questionContainer.innerHTML = '<p>Press <strong>Start</strong> to summon your first spooky question...</p>';
+  }
+  
+  // Show start buttons
+  if (startBtn) startBtn.classList.remove('hidden');
+  if (startBtnInQuiz) startBtnInQuiz.classList.remove('hidden');
+  
+  // Remove any transition classes
+  if (quizSection) {
+    quizSection.classList.remove('transition-in', 'transition-out');
+  }
+}
+
 /* ---------- Start Quiz ---------- */
 async function startQuiz() {
   // Prime audio on user gesture
   if (!audio.pool.click) initAudio();
   audio.play('click', { volume: 0.5 });
 
-  // Reset state
+  // Reset everything before starting
   score = 0;
   currentIndex = 0;
   updateScoreDisplay();
@@ -434,21 +467,33 @@ async function startQuiz() {
 
   } catch (error) {
     console.error('Error starting quiz:', error);
-    if (questionContainer) {
-      questionContainer.innerHTML = '<p>💀 Failed to summon questions. Check the console.</p>';
-      // Show the start button again on failure
-      if (startBtnInQuiz) startBtnInQuiz.classList.remove('hidden'); 
+    
+    let errorMsg = '💀 Failed to summon questions. ';
+    if (error.message.includes('Failed to load questions')) {
+      errorMsg += 'The spirits are not responding. Please try again in a moment.';
+    } else if (error.message.includes('No questions loaded')) {
+      errorMsg += 'No questions were conjured from the darkness.';
+    } else {
+      errorMsg += 'Something spooky went wrong!';
     }
-    // No need to show page 'home' since we are already on 'quiz' page
+    
+    if (questionContainer) {
+      questionContainer.innerHTML = `
+        <p>${errorMsg}</p>
+        <p style="font-size: 0.9em; opacity: 0.8;">
+          Our AI spirits may be overwhelmed. Please try again.
+        </p>
+      `;
+      
+      if (startBtnInQuiz) startBtnInQuiz.classList.remove('hidden');
+    }
   }
 }
 
 /* ---------- Event Listeners ---------- */
 document.addEventListener('DOMContentLoaded', () => {
-  // Initialize cursor
   setupSpookyCursorToggle();
 
-  // Menu toggle (mobile)
   const menuToggle = document.getElementById('menu-toggle');
   const navList = document.getElementById('nav-links');
   if (menuToggle && navList) {
@@ -462,18 +507,23 @@ document.addEventListener('DOMContentLoaded', () => {
       a.addEventListener('click', (e) => {
         e.preventDefault();
         const id = (a.getAttribute('href') || '').replace('#', '');
+        
         if (id) {
+          // BUG FIX: Clean up quiz state when navigating away
+          if (id !== 'quiz') {
+            clearInterval(timerInterval);
+            cancelAtmosphericThunder();
+          }
+          
+          // BUG FIX: Reset quiz UI when navigating to quiz page
+          if (id === 'quiz') {
+            resetQuizState();
+          }
+          
           showPage(id);
-          cancelAtmosphericThunder();
-          clearInterval(timerInterval);
         }
+        
         if (navList) navList.classList.remove('open');
-        
-        // When navigating to the quiz page, ensure the start button is visible
-        if (id === 'quiz' && startBtnInQuiz) {
-            startBtnInQuiz.classList.remove('hidden');
-        }
-        
       });
     });
   }
@@ -498,11 +548,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (restartBtn) {
     restartBtn.addEventListener('click', (e) => {
       e.preventDefault();
+      // BUG FIX: Reset state before going to home
+      resetQuizState();
       showPage('home');
-      cancelAtmosphericThunder();
-      clearInterval(timerInterval);
-      cancelAtmosphericThunder();
-      startQuiz();
     });
   }
 });
