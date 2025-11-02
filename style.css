@@ -124,6 +124,20 @@ p {
   z-index: 110;
 }
 
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-heading);
+  font-size: 1.5em;
+  color: var(--yellow-color);
+}
+
+.logo img {
+  width: 32px;
+  height: 32px;
+}
+
 .sfx-controls {
   display: flex;
   gap: 15px;
@@ -659,4 +673,22 @@ button:disabled {
   .sfx-controls label:has(input#cursor-toggle) {
     display: none;
   }
+}
+
+/* Skip to main content link for keyboard navigation */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--orange-color);
+  color: var(--black-color);
+  padding: 10px 20px;
+  text-decoration: none;
+  font-weight: bold;
+  z-index: 10000;
+  border-radius: 0 0 5px 0;
+}
+
+.skip-link:focus {
+  top: 0;
 }

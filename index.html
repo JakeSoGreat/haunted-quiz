@@ -17,52 +17,60 @@
   </head>
   <!-- Body -->
   <body>
+    <!-- Skip to main content link for screen readers -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
     <!-- Lightning Overlay -->
-    <div id="lightning-overlay"></div>
+    <div id="lightning-overlay" aria-hidden="true"></div>
 
     <!-- Page decorations -->
-    <div class="decorations">
-      <img src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/9648a7a2-03fe-4b48-b7ab-195ec34ac6a6" id="leftside" alt="halloween" />
-      <img src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/5c125b01-3bda-46ed-87bf-f64a9cc39d9b" id="rightside" alt="halloween" />
-      <img src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/5c7a5d00-501e-4f2b-b31a-0d0e2dac47e5" id="bottom" alt="halloween" />
-      <img src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/b8c09600-d3c2-4eab-a3e1-4f9a75d14331" id="leftpumpkin" alt="halloween" />
-      <img src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/dc895daa-7d0c-4b65-946c-36faecc1d78e" id="rightpumpkin" alt="halloween" />
+    <div class="decorations" aria-hidden="true">
+      <img src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/9648a7a2-03fe-4b48-b7ab-195ec34ac6a6" id="leftside" alt="" role="presentation" />
+      <img src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/5c125b01-3bda-46ed-87bf-f64a9cc39d9b" id="rightside" alt="" role="presentation" />
+      <img src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/5c7a5d00-501e-4f2b-b31a-0d0e2dac47e5" id="bottom" alt="" role="presentation" />
+      <img src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/b8c09600-d3c2-4eab-a3e1-4f9a75d14331" id="leftpumpkin" alt="" role="presentation" />
+      <img src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/dc895daa-7d0c-4b65-946c-36faecc1d78e" id="rightpumpkin" alt="" role="presentation" />
     </div>
 
     <!-- Navbar (SPA navigation handled in JS) -->
-    <header class="navbar">
+    <header class="navbar" role="banner">
       <!-- Logo -->
-      <div class="logo">Haunted 🎃 Quiz</div>
+      <div class="logo" aria-label="Haunted Quiz Logo"><img src="./pictures/favicon/favicon-32x32.png" alt="Haunted Quiz Icon"><span class="nav-title">Haunted Quiz</span></div>
+      
       <!-- User Controls -->
-      <div class="sfx-controls">
+      <div class="sfx-controls" role="group" aria-label="Game settings">
         <!-- Cursor Toggle (Hidden on small screens via CSS) -->
         <label class="toggle">
-          <input type="checkbox" id="cursor-toggle" checked />
-          <span>🕯️ Spooky Cursor</span>
+          <input type="checkbox" id="cursor-toggle" checked aria-label="Toggle spooky cursor trail" />
+          <span aria-hidden="true">🕯️ Spooky Cursor</span>
         </label>
         <!-- SFX Toggles -->
         <label title="Toggle sound effects">
           <input type="checkbox" id="sfx-toggle" checked aria-label="Toggle sound effects">
-          <span>🔊</span>
+          <span aria-hidden="true">🔊</span>
         </label>
         <label title="Toggle lightning flashes">
-          <input type="checkbox" id="flash-toggle" checked> ⚡
+          <input type="checkbox" id="flash-toggle" checked aria-label="Toggle lightning flash effects">
+          <span aria-hidden="true">⚡</span>
         </label>
       </div>
+      
       <!-- Nav Links -->
-      <button id="menu-toggle">☰</button>
-      <ul id="nav-links">
-        <li><a href="#home">Home</a></li>
-        <li><a href="#quiz">Play</a></li>
-        <li><a href="#meet">Meet the Coders</a></li>
-      </ul>
+      <button id="menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
+      <nav aria-label="Main navigation">
+        <ul id="nav-links">
+          <li><a href="#home" aria-label="Go to home page">Home</a></li>
+          <li><a href="#quiz" aria-label="Play the quiz">Play</a></li>
+          <li><a href="#meet" aria-label="Meet the development team">Meet the Coders</a></li>
+        </ul>
+      </nav>
     </header>
 
     <!-- Main SPA sections -->
-    <main>
+    <main id="main-content" role="main">
       <!-- HOME SECTION -->
-      <section id="home" class="page active">
-        <h1>Haunted Quiz</h1>
+      <section id="home" class="page active" aria-labelledby="home-title">
+        <h1 id="home-title">Haunted Quiz</h1>
         <p>
           Welcome to the Haunted Quiz! Test your spooky smarts with 10 eerie multiple-choice questions, conjured by OpenAI's
           spectral intelligence.<br>
@@ -70,143 +78,141 @@
           ultimate candy haul?<br>
         </p>
         <!-- This is the primary start button -->
-        <button id="start-btn">Start Quiz</button>
+        <button id="start-btn" aria-label="Start the haunted quiz">Start Quiz</button>
       </section>
 
       <!-- QUIZ SECTION -->
-      <section id="quiz" class="page hidden">
-        <h1>Spooky Quiz Time!</h1>
-        <div class="quiz-info">
-          <span id="timer" class="gameplay">⏱️ 120s</span>
-          <span id="score" class="gameplay">Score: 0/10</span>
+      <section id="quiz" class="page hidden" aria-labelledby="quiz-title" aria-live="polite">
+        <h1 id="quiz-title">Spooky Quiz Time!</h1>
+        <div class="quiz-info" role="status" aria-live="polite">
+          <span id="timer" class="gameplay" aria-label="Time remaining">⏱️ 120s</span>
+          <span id="score" class="gameplay" aria-label="Current score">Score: 0/10</span>
         </div>
 
-        <div id="questionContainer" class="quiz-container">
+        <div id="questionContainer" class="quiz-container" role="region" aria-label="Quiz questions">
           <!-- Text for pre-start state -->
           <p>Press <strong>Start</strong> to summon your first spooky question...</p>
           
           <!-- Secondary start button for users who navigate directly to the Play section -->
-          <button id="start-btn-in-quiz">Start</button>
+          <button id="start-btn-in-quiz" aria-label="Start the quiz">Start</button>
         </div>
       </section>
 
       <!-- RESULTS SECTION -->
-      <section id="result" class="page hidden">
-        <h2>Your Results</h2>
-        <p id="finalScore"></p>
-        <button id="restart">Try Again</button>
+      <section id="result" class="page hidden" aria-labelledby="result-title" role="region">
+        <h2 id="result-title">Your Results</h2>
+        <p id="finalScore" role="status" aria-live="polite"></p>
+        <button id="restart" aria-label="Restart the quiz and try again">Try Again</button>
       </section>
 
       <!-- MEET THE CODERS -->
-      <section id="meet" class="page hidden">
-        <h1> Meet the Coders</h1>
+      <section id="meet" class="page hidden" aria-labelledby="meet-title">
+        <h1 id="meet-title">👻 Meet the Coders</h1>
         <p class="team-intro">Team Spooky: fueled by caffeine, code, and chaos!</p>
-        <!-- 
-        TODO: add aria labels to links for better accessibility
-        -->
-        <div class="coders-grid">
+        
+        <div class="coders-grid" role="list" aria-label="Development team members">
           <!-- Aziz -->
-          <div class="coder-card">
+          <article class="coder-card" role="listitem">
             <div class="coder-image">
-              <img src="./pictures/aziz.jpg" alt="Picture of Aziz Ibrahim">
+              <img src="./pictures/aziz.jpg" alt="Aziz Ibrahim team member photo">
             </div>
             <div class="coder-info">
               <h3>Aziz Ibrahim</h3>
-              <div class="coder-links">
-                <a href="https://www.linkedin.com/in/aziz-ibrahim8" target="_blank" rel="noopener noreferrer">
-                  <span>💼</span> LinkedIn
+              <div class="coder-links" role="list" aria-label="Aziz Ibrahim's social links">
+                <a href="https://www.linkedin.com/in/aziz-ibrahim8" target="_blank" rel="noopener noreferrer" aria-label="Aziz Ibrahim's LinkedIn profile (opens in new tab)">
+                  <span aria-hidden="true">💼</span> LinkedIn
                 </a>
-                <a href="https://github.com/Aziz-Ibrahim" target="_blank" rel="noopener noreferrer">
-                  <span>💻</span> GitHub
+                <a href="https://github.com/Aziz-Ibrahim" target="_blank" rel="noopener noreferrer" aria-label="Aziz Ibrahim's GitHub profile (opens in new tab)">
+                  <span aria-hidden="true">💻</span> GitHub
                 </a>
               </div>
             </div>
-          </div>
+          </article>
 
           <!-- Ciaran -->
-          <div class="coder-card">
+          <article class="coder-card" role="listitem">
             <div class="coder-image">
-              <img src="./pictures/ciaran.jpg" alt="Picture of Ciaran Griffin">
+              <img src="./pictures/ciaran.jpg" alt="Ciaran Griffin team member photo">
             </div>
             <div class="coder-info">
               <h3>Ciaran Griffin</h3>
-              <div class="coder-links">
-                <a href="https://www.linkedin.com/in/ciaran-griffin-cg/" target="_blank" rel="noopener noreferrer">
-                  <span>💼</span> LinkedIn
+              <div class="coder-links" role="list" aria-label="Ciaran Griffin's social links">
+                <a href="https://www.linkedin.com/in/ciaran-griffin-cg/" target="_blank" rel="noopener noreferrer" aria-label="Ciaran Griffin's LinkedIn profile (opens in new tab)">
+                  <span aria-hidden="true">💼</span> LinkedIn
                 </a>
-                <a href="https://github.com/ciarangriffin93" target="_blank" rel="noopener noreferrer">
-                  <span>💻</span> GitHub
+                <a href="https://github.com/ciarangriffin93" target="_blank" rel="noopener noreferrer" aria-label="Ciaran Griffin's GitHub profile (opens in new tab)">
+                  <span aria-hidden="true">💻</span> GitHub
                 </a>
               </div>
             </div>
-          </div>
+          </article>
 
           <!-- Daniel -->
-          <div class="coder-card">
+          <article class="coder-card" role="listitem">
             <div class="coder-image">
-              <img src="./pictures/daniel.jpg" alt="Picture of Daniel Kepinski">
+              <img src="./pictures/daniel.jpg" alt="Daniel Kepinski team member photo">
             </div>
             <div class="coder-info">
               <h3>Daniel Kepinski</h3>
-              <div class="coder-links">
-                <a href="https://www.linkedin.com/in/daniel-kepinski-914965a4" target="_blank" rel="noopener noreferrer">
-                  <span>💼</span> LinkedIn
+              <div class="coder-links" role="list" aria-label="Daniel Kepinski's social links">
+                <a href="https://www.linkedin.com/in/daniel-kepinski-914965a4" target="_blank" rel="noopener noreferrer" aria-label="Daniel Kepinski's LinkedIn profile (opens in new tab)">
+                  <span aria-hidden="true">💼</span> LinkedIn
                 </a>
-                <a href="https://github.com/danielkepinski" target="_blank" rel="noopener noreferrer">
-                  <span>💻</span> GitHub
+                <a href="https://github.com/danielkepinski" target="_blank" rel="noopener noreferrer" aria-label="Daniel Kepinski's GitHub profile (opens in new tab)">
+                  <span aria-hidden="true">💻</span> GitHub
                 </a>
               </div>
             </div>
-          </div>
+          </article>
 
           <!-- Jake -->
-          <div class="coder-card">
+          <article class="coder-card" role="listitem">
             <div class="coder-image">
-              <img src="./pictures/jake.jpg" alt="Picture of Jake Smith">
+              <img src="./pictures/jake.jpg" alt="Jake Smith team member photo">
             </div>
             <div class="coder-info">
               <h3>Jake Smith</h3>
-              <div class="coder-links">
-                <a href="https://uk.linkedin.com/in/jake-smith-coder93" target="_blank" rel="noopener noreferrer">
-                  <span>💼</span> LinkedIn
+              <div class="coder-links" role="list" aria-label="Jake Smith's social links">
+                <a href="https://uk.linkedin.com/in/jake-smith-coder93" target="_blank" rel="noopener noreferrer" aria-label="Jake Smith's LinkedIn profile (opens in new tab)">
+                  <span aria-hidden="true">💼</span> LinkedIn
                 </a>
-                <a href="https://github.com/JakeSoGreat" target="_blank" rel="noopener noreferrer">
-                  <span>💻</span> GitHub
+                <a href="https://github.com/JakeSoGreat" target="_blank" rel="noopener noreferrer" aria-label="Jake Smith's GitHub profile (opens in new tab)">
+                  <span aria-hidden="true">💻</span> GitHub
                 </a>
               </div>
             </div>
-          </div>
+          </article>
 
           <!-- Luisa -->
-          <div class="coder-card">
+          <article class="coder-card" role="listitem">
             <div class="coder-image">
-              <img src="./pictures/luisa.jpg" alt="Picture of Luisa Evans">
+              <img src="./pictures/luisa.jpg" alt="Luisa Evans team member photo">
             </div>
             <div class="coder-info">
               <h3>Luisa Evans</h3>
-              <div class="coder-links">
-                <a href="https://www.linkedin.com/in/louisa-evans-822b0339/" target="_blank" rel="noopener noreferrer">
-                  <span>💼</span> LinkedIn
+              <div class="coder-links" role="list" aria-label="Luisa Evans's social links">
+                <a href="https://www.linkedin.com/in/louisa-evans-822b0339/" target="_blank" rel="noopener noreferrer" aria-label="Luisa Evans's LinkedIn profile (opens in new tab)">
+                  <span aria-hidden="true">💼</span> LinkedIn
                 </a>
-                <a href="https://github.com/louisae452" target="_blank" rel="noopener noreferrer">
-                  <span>💻</span> GitHub
+                <a href="https://github.com/louisae452" target="_blank" rel="noopener noreferrer" aria-label="Luisa Evans's GitHub profile (opens in new tab)">
+                  <span aria-hidden="true">💻</span> GitHub
                 </a>
               </div>
             </div>
-          </div>
+          </article>
         </div>
       </section>
     </main>
 
     <!-- Footer -->
-    <footer class="tech-footer">
+    <footer class="tech-footer" role="contentinfo">
       <p class="footer-title">Built with 🎃 for Hack or Treat 2025</p>
-      <div class="tech-stack">
-        <span class="tech-item">⚡ Vanilla JavaScript</span>
-        <span class="tech-item">🔄 AJAX / Fetch API</span>
-        <span class="tech-item">🤖 OpenAI GPT-4o-mini</span>
-        <span class="tech-item">🚀 Vercel Serverless</span>
-        <span class="tech-item">🎨 Pure CSS Magic</span>
+      <div class="tech-stack" role="list" aria-label="Technologies used">
+        <span class="tech-item" role="listitem">⚡ Vanilla JavaScript</span>
+        <span class="tech-item" role="listitem">🔄 AJAX / Fetch API</span>
+        <span class="tech-item" role="listitem">🤖 OpenAI GPT-4o-mini</span>
+        <span class="tech-item" role="listitem">🚀 Vercel Serverless</span>
+        <span class="tech-item" role="listitem">🎨 Pure CSS Magic</span>
       </div>
       <p class="footer-credits">Team 12 • Code Institute Hackathon</p>
     </footer>

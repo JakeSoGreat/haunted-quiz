@@ -508,7 +508,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const menuToggle = document.getElementById('menu-toggle');
   const navList = document.getElementById('nav-links');
   if (menuToggle && navList) {
-    menuToggle.addEventListener('click', () => navList.classList.toggle('open'));
+    menuToggle.addEventListener('click', () => {
+      const isOpen = navList.classList.toggle('open');
+      menuToggle.setAttribute('aria-expanded', isOpen);
+    });
   }
 
   // SPA navigation
