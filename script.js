@@ -409,14 +409,25 @@ function resetQuizState() {
     timerDisplay.style.color = '';
   }
   
-  // Clear question container
+  // Reset question container to original state with start button
   if (questionContainer) {
-    questionContainer.innerHTML = '<p>Press <strong>Start</strong> to summon your first spooky question...</p>';
+    questionContainer.innerHTML = `
+      <p>Press <strong>Start</strong> to summon your first spooky question...</p>
+      <button id="start-btn-in-quiz">Start</button>
+    `;
+    
+    // Re-attach event listener to the new button
+    const newStartBtnInQuiz = document.getElementById('start-btn-in-quiz');
+    if (newStartBtnInQuiz) {
+      newStartBtnInQuiz.addEventListener('click', (e) => {
+        e.preventDefault();
+        startQuiz();
+      });
+    }
   }
   
-  // Show start buttons
+  // Show start button on home page
   if (startBtn) startBtn.classList.remove('hidden');
-  if (startBtnInQuiz) startBtnInQuiz.classList.remove('hidden');
   
   // Remove any transition classes
   if (quizSection) {
