@@ -509,14 +509,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const id = (a.getAttribute('href') || '').replace('#', '');
         
         if (id) {
-          // BUG FIX: Clean up quiz state when navigating away
-          if (id !== 'quiz') {
-            clearInterval(timerInterval);
-            cancelAtmosphericThunder();
-          }
+          // BUG FIX: Always clean up when navigating away from quiz
+          clearInterval(timerInterval);
+          cancelAtmosphericThunder();
           
-          // BUG FIX: Reset quiz UI when navigating to quiz page
-          if (id === 'quiz') {
+          // BUG FIX: Reset quiz UI when navigating to quiz OR home page
+          if (id === 'quiz' || id === 'home') {
             resetQuizState();
           }
           
