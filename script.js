@@ -199,7 +199,7 @@ function showPage(id) {
 /* ---------- Load Questions ---------- */
 async function loadQuestions() {
   // TOGGLE FOR TESTING vs PRODUCTION
-  const IS_TESTING = true; // Set to false before deploying
+  const IS_TESTING = false; // Set to false before deploying
   
   const url = IS_TESTING 
     ? './generate-question.json'  // Mock data
