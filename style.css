@@ -296,12 +296,9 @@ button:disabled {
   }
 }
 
-/* ========================================
-   MEET THE CODERS SECTION
-   ======================================== */
+/* MEET THE CODERS SECTION */
 
 #meet {
-  padding: 40px 20px;
   max-width: 1400px;
   margin: 0 auto;
   overflow-y: auto; /* Allow scrolling within this section */
@@ -443,9 +440,60 @@ button:disabled {
   font-size: 1.2em;
 }
 
-/* ========================================
-   RESPONSIVE DESIGN
-   ======================================== */
+/* FOOTER */
+
+.tech-footer {
+  position: relative;
+  z-index: 10;
+  background: linear-gradient(135deg, var(--purple-color) 0%, rgba(84, 46, 113, 0.05) 100%);
+  border-top: 2px solid var(--orange-color);
+  padding: 5px 20px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.footer-title {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: var(--yellow-color);
+  margin-bottom: 10px;
+}
+
+.tech-stack {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.tech-item {
+  background: var(--black-color);
+  color: var(--green-color);
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 0.65em;
+  font-weight: bold;
+  border: 2px solid var(--green-color);
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.3);
+}
+
+.tech-item:hover {
+  background: var(--green-color);
+  color: var(--black-color);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.3);
+}
+
+.footer-credits {
+  font-size: 0.9em;
+  color: var(--yellow-color);
+  opacity: 0.8;
+  margin-top: 10px;
+}
+
+/* RESPONSIVE DESIGN */
 
 /* Large screens - 3 columns */
 @media (min-width: 1200px) {
@@ -485,6 +533,27 @@ button:disabled {
   .team-intro {
     font-size: 1em;
     margin-bottom: 30px;
+  }
+}
+
+/* Responsive Footer */
+@media (max-width: 600px) {
+  .tech-footer {
+    padding: 20px 15px;
+    margin-top: 40px;
+  }
+  
+  .footer-title {
+    font-size: 1.1em;
+  }
+  
+  .tech-stack {
+    gap: 10px;
+  }
+  
+  .tech-item {
+    font-size: 0.55em;
+    padding: 8px 15px;
   }
 }
 
@@ -540,9 +609,7 @@ button:disabled {
   }
 }
 
-/* ========================================
-   SPOOKY CURSOR TRAIL
-   ======================================== */
+/* SPOOKY CURSOR TRAIL */
 
 .cursor-trail {
   position: fixed;
