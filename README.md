@@ -1,8 +1,12 @@
-# 🎃 Haunted Quiz
+# [🎃 Haunted Quiz](https://haunted-quiz.vercel.app/)
 
 A spooky Halloween-themed quiz application that generates unique trivia questions using OpenAI's API. Built for the "Hack or Treat" hackathon.
 
-![Haunted Quiz Banner](docs/haunted-quiz-banner.png)
+![Haunted Quiz Banner](docs/banner.png)
+
+Deployed site [here](https://haunted-quiz.vercel.app/)
+
+---
 
 ## 🌟 Features
 
@@ -19,23 +23,34 @@ A spooky Halloween-themed quiz application that generates unique trivia question
 - **Spooky Cursor Trail** - Optional glowing wisp/bat trail that follows mouse movement
 - **Question Transitions** - Smooth smoke-like fade in/out animations between questions
 - **Sound Effects** - Click, correct answer, wrong answer, and victory sounds
+![navbar](docs/nav.png)
 
 ### Accessibility & UX
 - **Toggle Controls** - User can enable/disable SFX, lightning flashes, and cursor effects
-![SFX-Toggle](docs/sfx-toggle.png)
 - **Reduced Motion Support** - Respects `prefers-reduced-motion` for accessibility
-![Cursor-Toggle](docs/cursor-toggle.png)
+![SFX-Toggle](docs/user-control.png)
 - **Mobile Responsive** - Hamburger menu and touch-optimized controls
-![SM-Header](docs/sm-header.png)
+![SM-Header](docs/sm-nav.png)
 - **Fine Pointer Detection** - Cursor effects only on devices with precise pointing (no touch)
 
 ### Visual Design
-<!-- TODO: Add more visuals, wireframes and UI workflow -->
 - **Halloween Theme** - Purple, orange, green, and yellow color scheme
 - **Decorative Graphics** - Spooky background images (pumpkins, haunted scenery)
 - **Custom Fonts** - "Butcherman" for headings, "SUSE Mono" for body text
 - **Gradient Text** - Yellow-to-green gradient on main headings
 
+### Wireframes
+
+- Landing screen:
+![landing page](docs/landing.png)
+- Quiz screen:
+![quiz page](docs/quiz.png)
+- Result screen:
+![result page](docs/result.png)
+- Meet the team screen:
+![meet the team](docs/team.png)
+
+---
 ## 🏗️ Project Structure
 
 ```
@@ -54,7 +69,7 @@ A spooky Halloween-themed quiz application that generates unique trivia question
 ├── script.js                    # Core application logic
 └── generate-question.json       # Mock data for local testing
 ```
-
+---
 ## ⚙️ JavaScript Functionality
 
 ### Global State Management
@@ -144,6 +159,7 @@ audio = {
 - Shows target page by ID
 - Manages `hidden` and `active` classes for animations
 
+---
 ## 🧪 Manual Testing (Local)
 
 ### Prerequisites
@@ -239,15 +255,48 @@ audio = {
 ### Known Issues (To Fix)
 - Emoji encoding issues in some browsers (save files as UTF-8)
 
-## 🚀 Deployment Testing (Coming Soon)
+---
 
-After deploying to Vercel/Netlify:
-- Change `IS_TESTING` to `false` in `script.js`
-- Test OpenAI API integration
-- Verify environment variable `OPENAI_API_KEY` is set
-- Test CORS headers
-- Confirm serverless function responds correctly
-- Test on multiple devices and browsers
+## 🚀 Deployment Testing (Live on Vercel)
+
+### Environment
+- Platform: **Vercel**
+- Branch: `production` (auto-deploy enabled)
+- Environment variable: `OPENAI_API_KEY` set and verified
+- Testing mode: `IS_TESTING = false` in `script.js`
+
+### Test Scenarios
+
+#### ✅ Serverless Function Tests
+- Accessed `/api/generate-question.js` endpoint directly — returned valid JSON response.
+- Verified OpenAI API responses include dynamic, topic-relevant questions.
+- Confirmed error handling for invalid or empty responses (no app crashes).
+- Checked response latency — average under 2 seconds.
+
+#### ✅ API Integration Tests
+- Quiz successfully fetched 10 AI-generated questions on start.
+- Questions varied across play sessions (non-repetitive content confirmed).
+- Score updates reflected correctly during each session.
+- Timer and quiz transitions functioned identically to local environment.
+
+#### ✅ Frontend & UI Tests
+- Deployed app loads without console errors or missing assets.
+- Navigation works across all sections (Home, Quiz, Meet the Coders).
+- Timer countdown, scoring, and result page logic perform consistently.
+- SFX and lightning effects behave as expected in production.
+- No CORS or HTTPS-related issues detected.
+
+#### ✅ Cross-Device Compatibility
+- Tested on Chrome, Firefox, Safari, and Edge.
+- Verified responsiveness on desktop, tablet, and mobile devices.
+- Audio and animation settings respected across browsers.
+
+### Result
+All deployment and integration tests **passed successfully**.  
+**Haunted Quiz** is now live, stable, and fully playable at:  
+🔗 **https://haunted-quiz.vercel.app**
+
+---
 
 ## 🛠️ Tech Stack
 
@@ -255,8 +304,10 @@ After deploying to Vercel/Netlify:
 - **Backend**: Serverless function (Vercel/Netlify)
 - **AI**: OpenAI API (GPT-4o-mini)
 - **Fonts**: Google Fonts (Butcherman, SUSE Mono)
-- **Hosting**: Vercel / Netlify / GitHub Pages
+- **Hosting**: Vercel
+![footer](docs/footer.png)
 
+---
 ## 👥 Team
 
 Team12 - Hack or Treat Hackathon 2025
@@ -266,9 +317,22 @@ Team12 - Hack or Treat Hackathon 2025
 - [Daniel](https://github.com/danielkepinski)
 - [Aziz](https://github.com/aziz-ibrahim)
 
+---
 
 ## 📝 License
 
+
+This project is licensed under the **MIT License**.
+
+You are free to:
+- Use, copy, modify, merge, publish, or distribute the code.
+- Use it for personal, educational, or commercial projects.
+
+You must include the original copyright notice:
+```
+Copyright (c) 2025 Team12 Spooky Coders
+```
+Full license text is available in the [LICENSE](docs/LICENSE.md) file.
 
 
 ---
